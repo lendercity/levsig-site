@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevSig — Members Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--green-bg:rgba(0,200,83,0.1);--red:#FF3B30;--red-bg:rgba(255,59,48,0.1);
+  --amber:#FF9500;--amber-bg:rgba(255,149,0,0.1);
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+  --bg:#0A0A0A;--surface:#111111;--surface2:#181818;--border:#222222;
+}
+html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--white);-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN PAGE ─────────────────────────────────────────────────────────────── */
+#login-page{
+  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;
+}
+.login-box{width:100%;max-width:400px}
+.login-logo{font-family:var(--mono);font-size:1.25rem;font-weight:700;margin-bottom:2.5rem;display:flex;align-items:center;gap:10px}
+.login-logo svg{flex-shrink:0}
+.login-logo span{color:var(--green)}
+.login-title{font-size:1.5rem;font-weight:600;margin-bottom:.5rem;letter-spacing:-.02em}
+.login-sub{font-size:.875rem;color:var(--g500);margin-bottom:2rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:.75rem;font-family:var(--mono);color:var(--g500);letter-spacing:.06em;margin-bottom:.4rem;text-transform:uppercase}
+.field input{width:100%;font-family:var(--sans);font-size:.9rem;padding:.75rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--white);outline:none;transition:border-color .15s}
+.field input:focus{border-color:var(--green)}
+.field input::placeholder{color:#444}
+.login-btn{width:100%;font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.875rem;background:var(--green);color:var(--black);border:none;border-radius:6px;cursor:pointer;letter-spacing:.04em;margin-top:.5rem;transition:opacity .15s}
+.login-btn:hover{opacity:.9}
+.login-btn:disabled{opacity:.5;cursor:not-allowed}
+.login-msg{font-size:.8rem;text-align:center;margin-top:1rem;min-height:1.2rem}
+.login-msg.error{color:var(--red)}
+.login-msg.success{color:var(--green)}
+.login-fine{font-size:.75rem;color:#444;text-align:center;margin-top:1.5rem}
+.login-fine a{color:var(--g500);text-decoration:none}
+.login-fine a:hover{color:var(--white)}
+
+/* ── DASHBOARD ──────────────────────────────────────────────────────────────── */
+#dashboard-page{display:none;min-height:100vh}
+
+/* Nav */
+.dash-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 2rem;border-bottom:1px solid var(--border);
+  background:var(--surface);position:sticky;top:0;z-index:100;
+}
+.dash-logo{display:flex;align-items:center;text-decoration:none;color:var(--white)}
+.dash-logo span{color:var(--green)}
+.dash-nav-right{display:flex;align-items:center;gap:1.5rem}
+.dash-email{font-family:var(--mono);font-size:.7rem;color:var(--g500)}
+.dash-tier{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:3px;background:var(--green-bg);color:var(--green)}
+.logout-btn{font-family:var(--mono);font-size:.7rem;color:var(--g500);background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s}
+.logout-btn:hover{color:var(--white)}
+
+/* Main layout */
+.dash-main{max-width:1100px;margin:0 auto;padding:2rem}
+
+/* Date bar */
+.date-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.date-label{font-family:var(--mono);font-size:.7rem;color:var(--g500);letter-spacing:.06em}
+.date-value{font-family:var(--mono);font-size:.85rem;color:var(--white);font-weight:700}
+.refresh-btn{font-family:var(--mono);font-size:.7rem;color:var(--g500);background:none;border:1px solid var(--border);border-radius:4px;padding:4px 12px;cursor:pointer;transition:all .15s}
+.refresh-btn:hover{border-color:var(--green);color:var(--green)}
+
+/* Summary pills */
+.summary-pills{display:flex;gap:.75rem;margin-bottom:2rem;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:6px 16px;border-radius:20px}
+.pill-entry{background:var(--green-bg);color:var(--green);border:1px solid rgba(0,200,83,.2)}
+.pill-hold {background:var(--amber-bg);color:var(--amber);border:1px solid rgba(255,149,0,.2)}
+.pill-exit {background:var(--red-bg);color:var(--red);border:1px solid rgba(255,59,48,.2)}
+.pill-wait {background:rgba(100,100,100,.1);color:var(--g500);border:1px solid var(--border)}
+
+/* Signal grid */
+.signal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;margin-bottom:2rem}
+
+/* Signal card */
+.sig-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .15s}
+.sig-card:hover{border-color:#333}
+.sig-card-top{padding:14px 16px 10px;border-bottom:1px solid var(--border)}
+.sig-card-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sig-underlying{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--white)}
+.sig-sector{font-family:var(--mono);font-size:.7rem;color:#777;margin-left:6px}
+.sig-status{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:4px}
+.status-ENTRY   {background:var(--green-bg);color:var(--green)}
+.status-HOLD    {background:var(--amber-bg);color:var(--amber)}
+.status-RSI_EXIT{background:var(--red-bg);color:var(--red)}
+.status-WAIT    {background:rgba(100,100,100,.1);color:var(--g500)}
+.sig-action{font-family:var(--mono);font-size:.7rem;color:var(--g500);line-height:1.5}
+.sig-card-bottom{padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.sig-meta{font-family:var(--mono);font-size:.72rem;color:#888;font-weight:500}
+.sig-meta strong{color:var(--g500)}
+.sig-conf{font-family:var(--mono);font-size:.65rem}
+.sig-card-etfs{padding:8px 16px;background:var(--surface2);border-top:1px solid var(--border);display:flex;gap:.5rem;flex-wrap:wrap}
+.etf-tag{font-family:var(--mono);font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:3px;background:rgba(0,200,83,.12);color:var(--green);border:1px solid rgba(0,200,83,.2)}
+.earnings-warn{padding:6px 16px;background:rgba(255,149,0,.08);border-top:1px solid rgba(255,149,0,.15);font-family:var(--mono);font-size:.65rem;color:var(--amber)}
+
+/* Section headers */
+.section-head{font-family:var(--mono);font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.stat-box-label{font-family:var(--mono);font-size:.65rem;color:var(--g500);letter-spacing:.06em;margin-bottom:.4rem}
+.stat-box-val{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--white)}
+.stat-box-val.green{color:var(--green)}
+.stat-box-val.red{color:var(--red)}
+
+/* Empty state */
+.empty{text-align:center;padding:3rem;font-family:var(--mono);font-size:.8rem;color:#444}
+
+/* Loading */
+.loading{text-align:center;padding:3rem;font-family:var(--mono);font-size:.8rem;color:var(--g500)}
+.loading::after{content:'';animation:dots 1.5s infinite}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* Track record table */
+.track-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.track-table th{font-family:var(--mono);font-size:.65rem;color:var(--g500);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);letter-spacing:.06em}
+.track-table td{font-family:var(--mono);font-size:.75rem;padding:10px 12px;border-bottom:1px solid var(--border);color:var(--white)}
+.track-table tr:last-child td{border-bottom:none}
+.track-table tr:hover td{background:var(--surface2)}
+.pnl-pos{color:var(--green)}
+.pnl-neg{color:var(--red)}
+.status-open{color:var(--amber)}
+.status-closed{color:var(--g500)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.tab{font-family:var(--mono);font-size:.75rem;padding:.75rem 1.25rem;background:none;border:none;color:var(--g500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.tab:hover{color:var(--white)}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+
+.dash-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.dash-hamburger span{display:block;width:22px;height:2px;background:#ffffff;border-radius:2px}
+.dash-mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#0D0D0D;z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+.dash-mobile-menu.open{display:flex}
+.dash-mobile-menu a,.dash-mobile-menu button{font-family:var(--mono);font-size:1.1rem;color:#ffffff;text-decoration:none;background:none;border:none;cursor:pointer}
+.dash-mobile-menu .dm-close{position:absolute;top:1.5rem;right:1.5rem;font-size:1.5rem}
+@media(max-width:640px){
+  .dash-nav{padding:.75rem 1rem}
+  .dash-hamburger{display:flex}
+  .dash-main{padding:1rem}
+  .signal-grid{grid-template-columns:1fr}
+  .dash-email{display:none}
+  .sig-card-bottom{flex-direction:column;gap:.5rem;align-items:flex-start}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .tabs{overflow-x:auto}
+  .tab{white-space:nowrap;padding:.75rem 1rem;font-size:.7rem}
+  .track-table{font-size:.7rem}
+  .track-table th,.track-table td{padding:8px 6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN PAGE ─────────────────────────────────────────────────────────── -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+        <rect x="0"  y="22" width="7" height="14" rx="2" fill="#ffffff" opacity="0.18"/>
+        <rect x="11" y="15" width="7" height="21" rx="2" fill="#ffffff" opacity="0.38"/>
+        <rect x="22" y="6"  width="7" height="30" rx="2" fill="#00C853"/>
+        <text x="33" y="28" font-family="Space Mono,monospace" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-1">Lev<tspan fill="#00C853">Sig</tspan></text>
+      </svg>
+    </div>
+    <h1 class="login-title">Members dashboard</h1>
+    <p class="login-sub">Enter your email to access your LevSig signal dashboard. We'll send you a secure login link.</p>
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="login-email" placeholder="you@email.com" autocomplete="email">
+    </div>
+    <button class="login-btn" id="login-btn" onclick="handleLogin()">SEND MAGIC LINK</button>
+    <p class="login-msg" id="login-msg"></p>
+    <p class="login-fine">
+      Not a member? <a href="https://levsig.com">Sign up free at levsig.com</a>
+    </p>
+  </div>
+</div>
+
+<!-- ── DASHBOARD PAGE ─────────────────────────────────────────────────────── -->
+<div id="dashboard-page">
+  <nav class="dash-nav">
+    <a href="#" class="dash-logo">
+      <svg width="140" height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+        <rect x="0"  y="20" width="6" height="12" rx="1.5" fill="#ffffff" opacity="0.18"/>
+        <rect x="9"  y="14" width="6" height="18" rx="1.5" fill="#ffffff" opacity="0.38"/>
+        <rect x="18" y="6"  width="6" height="26" rx="1.5" fill="#00C853"/>
+        <text x="28" y="26" font-family="Space Mono,monospace" font-size="18" font-weight="700" fill="#ffffff" letter-spacing="-1">Lev<tspan fill="#00C853">Sig</tspan></text>
+      </svg>
+    </a>
+    <div class="dash-nav-right">
+      <span class="dash-email" id="user-email"></span>
+      <span class="dash-tier" id="user-tier">FREE</span>
+      <button class="logout-btn" onclick="handleLogout()">Sign out</button>
+    </div>
+    <button class="dash-hamburger" onclick="toggleDashMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+<!-- Mobile menu -->
+<div class="dash-mobile-menu" id="dash-mobile-menu">
+  <button class="dm-close" onclick="toggleDashMenu()">✕</button>
+  <a href="#" onclick="switchTab('signals', document.querySelector('.tab'));toggleDashMenu()">Today's Signals</a>
+  <a href="#" onclick="switchTab('track', document.querySelectorAll('.tab')[1]);toggleDashMenu()">Track Record</a>
+  <button onclick="handleLogout()">Sign out</button>
+</div>
+  </nav>
+
+  <!-- Dashboard header -->
+  <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:1.25rem 2rem;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <h1 style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--white);margin:0 0 2px;">Members Dashboard</h1>
+      <p style="font-family:var(--mono);font-size:.7rem;color:var(--g500);margin:0;">Daily signals for Leveraged ETFs · levsig.com</p>
+    </div>
+  </div>
+
+  <div class="dash-main">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('signals', this)">Today's Signals</button>
+      <button class="tab" onclick="switchTab('track', this)">Track Record</button>
+    </div>
+
+    <!-- ── SIGNALS TAB ──────────────────────────────────────────────────── -->
+    <div id="tab-signals">
+      <div class="date-bar">
+        <div>
+          <div class="date-label">SIGNAL DATE</div>
+          <div class="date-value" id="signal-date">—</div>
+        </div>
+        <button class="refresh-btn" onclick="loadSignals()">↻ Refresh</button>
+      </div>
+
+      <div class="summary-pills" id="summary-pills"></div>
+
+      <div id="signals-content"><div class="loading">Loading signals</div></div>
+    </div>
+
+    <!-- ── TRACK RECORD TAB ─────────────────────────────────────────────── -->
+    <div id="tab-track" style="display:none">
+      <div class="stats-row" id="track-stats"></div>
+      <div class="section-head">Signal history</div>
+      <div id="track-content"><div class="loading">Loading track record</div></div>
+    </div>
+
+  </div>
+
+  <!-- Legend -->
+  <div style="margin-top:2.5rem;border-top:1px solid var(--border);padding-top:1.5rem;">
+    <p style="font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--g500);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;">Signal legend</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;">
+        <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">DECAY RISK</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">How much daily rebalancing erodes value in choppy or sideways markets.</p>
+        <div style="display:flex;flex-direction:column;gap:.4rem;">
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">HIGH</strong> — 3× leverage or high volatility underlying (SOXL, MSTU, HIMZ)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — 2× leverage, moderate volatility (NVDX, ROBN, TSLT)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">LOW</strong> — 2× leverage, stable underlying (PLTU, AAPX)</span>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;">
+        <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">CONFIDENCE</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">Signal reliability based on underlying type, liquidity, and earnings risk.</p>
+        <div style="display:flex;flex-direction:column;gap:.4rem;">
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">HIGH</strong> — Index-based (TQQQ, TECL, SOXL, UPRO)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">MED-HIGH</strong> — Large cap single stock (NVDA, AAPL, MSFT)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — Mid-tier single stock (HOOD, HIMS, COIN)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">LOW</strong> — Speculative or thin liquidity (UBER, DKNG)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">CAUTION</strong> — Earnings within 5 trading days</span>
+        </div>
+      </div>
+    </div>
+    <!-- Status legend -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-top:1rem;">
+      <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">SIGNAL STATUS</p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
+        <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#00C853;font-weight:700;">ENTRY</span> — All indicators aligned. Enter position, set ATR stop.</span>
+        <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#FF9500;font-weight:700;">HOLD</span> — Trend intact. Trail your stop to the current level shown.</span>
+        <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#FF3B30;font-weight:700;">RSI EXIT</span> — Momentum overbought. Exit position, watch for re-entry.</span>
+        <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#666;font-weight:700;">WAIT</span> — Indicators not aligned. No action.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── Supabase init ─────────────────────────────────────────────────────────────
+const SUPABASE_URL  = 'https://wydsszcuqtwnikugeezo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5ZHNzemN1cXR3bmlrdWdlZXpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNDQ5MDIsImV4cCI6MjA5NzcyMDkwMn0.qafYg_nLbL1H0dJDkyPWQ-9X08NlQ4K1xzgA-fN16aE';
+let supabase;
+window.addEventListener('load', async function() {
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    console.log('Supabase initialized OK');
+
+    // Handle magic link token in URL hash
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      console.log('Magic link token detected in URL');
+      const { data, error } = await supabase.auth.getSession();
+      if (data?.session?.user) {
+        showDashboard(data.session.user);
+        return;
+      }
+    }
+
+    // Check existing session
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      showDashboard(session.user);
+    } else {
+      showLogin();
+    }
+
+    // Listen for auth changes
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth event:', event);
+      if (event === 'SIGNED_IN' && session?.user) {
+        showDashboard(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        showLogin();
+      }
+    });
+
+  } catch(e) {
+    console.error('Supabase init error:', e);
+    document.getElementById('login-msg').textContent = 'Error loading. Please refresh.';
+    document.getElementById('login-msg').className = 'login-msg error';
+  }
+});
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const msg   = document.getElementById('login-msg');
+  const btn   = document.getElementById('login-btn');
+
+  if (!email || !email.includes('@')) {
+    msg.className = 'login-msg error';
+    msg.textContent = 'Please enter a valid email address.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'SENDING...';
+  msg.textContent = '';
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.href }
+  });
+
+  if (error) {
+    msg.className = 'login-msg error';
+    msg.textContent = error.message;
+    btn.disabled = false;
+    btn.textContent = 'SEND MAGIC LINK';
+  } else {
+    msg.className = 'login-msg success';
+    msg.textContent = '✓ Magic link sent — check your inbox.';
+    btn.textContent = 'LINK SENT';
+  }
+}
+
+async function handleLogout() {
+  await supabase.auth.signOut();
+  showLogin();
+}
+
+function showLogin() {
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('dashboard-page').style.display = 'none';
+}
+
+function showDashboard(user) {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('dashboard-page').style.display = 'block';
+  document.getElementById('user-email').textContent = user.email;
+  document.title = 'LevSig — Members Dashboard';
+  loadSignals();
+}
+
+// Auth state handled in window.load above
+
+function toggleDashMenu(){
+  const menu = document.getElementById('dash-mobile-menu');
+  if(menu) {
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  }
+}
+
+// Enter key on login
+document.getElementById('login-email').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+// ── Load signals ──────────────────────────────────────────────────────────────
+async function loadSignals() {
+  document.getElementById('signals-content').innerHTML = '<div class="loading">Loading signals</div>';
+  document.getElementById('summary-pills').innerHTML = '';
+
+  const { data, error } = await supabase
+    .from('signals')
+    .select('*')
+    .order('signal_date', { ascending: false })
+    .order('status', { ascending: true })
+    .limit(200);
+
+  if (error || !data || data.length === 0) {
+    document.getElementById('signals-content').innerHTML = '<div class="empty">No signals yet — check back after market close.</div>';
+    return;
+  }
+
+  // Get most recent date
+  const latestDate = data[0].signal_date;
+  const rawSignals = data.filter(s => s.signal_date === latestDate);
+
+  // Group by underlying — one card per underlying, all ETFs listed
+  const grouped = {};
+  rawSignals.forEach(s => {
+    if (!grouped[s.underlying]) {
+      grouped[s.underlying] = { ...s, etf_tickers: [] };
+    }
+    if (s.etf_ticker && !grouped[s.underlying].etf_tickers.includes(s.etf_ticker)) {
+      grouped[s.underlying].etf_tickers.push(s.etf_ticker);
+    }
+  });
+  const todaySignals = Object.values(grouped);
+
+  document.getElementById('signal-date').textContent = new Date(latestDate + 'T12:00:00').toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // Summary pills
+  const counts = { ENTRY: 0, HOLD: 0, RSI_EXIT: 0, WAIT: 0 };
+  todaySignals.forEach(s => { counts[s.status] = (counts[s.status] || 0) + 1; });
+
+  document.getElementById('summary-pills').innerHTML = `
+    ${counts.ENTRY   ? `<span class="pill pill-entry">${counts.ENTRY} ENTRY</span>` : ''}
+    ${counts.HOLD    ? `<span class="pill pill-hold">${counts.HOLD} HOLD</span>` : ''}
+    ${counts.RSI_EXIT? `<span class="pill pill-exit">${counts.RSI_EXIT} RSI EXIT</span>` : ''}
+    ${counts.WAIT    ? `<span class="pill pill-wait">${counts.WAIT} WAIT</span>` : ''}
+  `;
+
+  // Order: ENTRY first, then RSI_EXIT, then HOLD, then WAIT
+  const order = { ENTRY: 0, RSI_EXIT: 1, HOLD: 2, WAIT: 3 };
+  todaySignals.sort((a, b) => (order[a.status] || 99) - (order[b.status] || 99));
+
+  // Group by status section
+  const sections = [
+    { key: 'ENTRY',    label: 'Entry signals' },
+    { key: 'RSI_EXIT', label: 'Exit signals' },
+    { key: 'HOLD',     label: 'Hold — trail stop' },
+    { key: 'WAIT',     label: 'Waiting — no signal' },
+  ];
+
+  let html = '';
+  sections.forEach(({ key, label }) => {
+    const group = todaySignals.filter(s => s.status === key);
+    if (group.length === 0) return;
+    html += `<div class="section-head" style="margin-bottom:.75rem;margin-top:${html ? '1.5rem' : '0'}">${label}</div>`;
+    html += '<div class="signal-grid">';
+    group.forEach(s => { html += renderCard(s); });
+    html += '</div>';
+  });
+
+  document.getElementById('signals-content').innerHTML = html;
+}
+
+function renderCard(s) {
+  const confColor = s.confidence === 'HIGH' ? '#00C853' :
+                    s.confidence === 'MEDIUM_HIGH' ? '#00C853' :
+                    s.confidence === 'MEDIUM' ? '#FF9500' :
+                    s.confidence === 'LOW' ? '#FF9500' : '#FF3B30';
+
+  const decayColor = s.decay_risk === 'HIGH' ? '#FF3B30' :
+                     s.decay_risk === 'MEDIUM' ? '#FF9500' : '#00C853';
+
+  const earningsWarn = s.earnings_risk
+    ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
+    : '';
+
+  const stopLine = s.stop_price
+    ? `<span class="sig-meta">Stop <strong>$${s.stop_price}</strong></span>`
+    : '';
+
+  const rsiLine = s.rsi
+    ? `<span class="sig-meta">RSI <strong>${s.rsi}</strong></span>`
+    : '';
+
+  // Build ETF display
+  const etfTickers = (s.etf_tickers && s.etf_tickers.length > 0)
+    ? s.etf_tickers
+    : (s.etf_ticker ? [s.etf_ticker] : [s.underlying]);
+
+  const primaryDisplay = etfTickers.join(' · ');
+  const etfTagsHtml = etfTickers.map(t =>
+    `<span class="etf-tag">${t}</span>`
+  ).join('');
+
+  return `
+  <div class="sig-card">
+    <div class="sig-card-top">
+      <div class="sig-card-row1">
+        <div>
+          <span class="sig-underlying">${primaryDisplay}</span>
+          <span class="sig-sector" style="display:block;margin-top:3px;font-size:.7rem;color:#777;font-family:var(--mono);">Source: ${s.underlying} · ${s.sector || ''}</span>
+        </div>
+        <span class="sig-status status-${s.status}">${s.status.replace('_', ' ')}</span>
+      </div>
+      <div class="sig-action" style="color:#ccc;margin-top:6px;">${s.action || '—'}</div>
+    </div>
+    ${earningsWarn}
+    <div class="sig-card-bottom">
+      <div style="display:flex;gap:1.25rem;flex-wrap:wrap;">
+        ${stopLine}
+        ${rsiLine}
+      </div>
+      <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <span class="sig-meta">Decay Risk: <strong style="color:${decayColor}">${s.decay_risk || '—'}</strong></span>
+        <span class="sig-meta">Confidence: <strong style="color:${confColor}">${s.confidence || '—'}</strong></span>
+      </div>
+    </div>
+    <div class="sig-card-etfs">
+      ${etfTagsHtml}
+      <span style="font-family:var(--mono);font-size:.65rem;color:#444;margin-left:auto;">Signal source: ${s.underlying}</span>
+    </div>
+  </div>`;
+}
+
+// ── Load track record ─────────────────────────────────────────────────────────
+async function loadTrackRecord() {
+  document.getElementById('track-content').innerHTML = '<div class="loading">Loading track record</div>';
+
+  const { data, error } = await supabase
+    .from('track_record')
+    .select('*')
+    .order('entry_date', { ascending: false })
+    .limit(50);
+
+  // Load stats
+  const { data: stats } = await supabase
+    .from('track_record_stats')
+    .select('*')
+    .single();
+
+  if (stats) {
+    const winRate = stats.total_trades > 0
+      ? Math.round((stats.wins / stats.total_trades) * 100) : 0;
+
+    document.getElementById('track-stats').innerHTML = `
+      <div class="stat-box">
+        <div class="stat-box-label">TOTAL TRADES</div>
+        <div class="stat-box-val">${stats.total_trades || 0}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">WIN RATE</div>
+        <div class="stat-box-val ${winRate >= 50 ? 'green' : 'red'}">${winRate}%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">AVG WIN</div>
+        <div class="stat-box-val green">+${stats.avg_win_pct || 0}%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">AVG LOSS</div>
+        <div class="stat-box-val red">${stats.avg_loss_pct || 0}%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">OPEN TRADES</div>
+        <div class="stat-box-val">${stats.open_trades || 0}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">AVG HOLD</div>
+        <div class="stat-box-val">${stats.avg_holding_days || 0}d</div>
+      </div>
+    `;
+  }
+
+  if (error || !data || data.length === 0) {
+    document.getElementById('track-content').innerHTML = '<div class="empty">No closed trades yet — track record builds as signals complete.</div>';
+    return;
+  }
+
+  const rows = data.map(t => `
+    <tr>
+      <td>${t.etf_ticker}</td>
+      <td>${t.entry_date}</td>
+      <td>$${t.entry_price}</td>
+      <td>${t.stop_price ? '$' + t.stop_price : '—'}</td>
+      <td>${t.exit_date || '—'}</td>
+      <td>${t.exit_price ? '$' + t.exit_price : '—'}</td>
+      <td class="${t.pnl_pct > 0 ? 'pnl-pos' : t.pnl_pct < 0 ? 'pnl-neg' : ''}">${t.pnl_pct !== null ? (t.pnl_pct > 0 ? '+' : '') + t.pnl_pct + '%' : '—'}</td>
+      <td>${t.exit_reason || '—'}</td>
+      <td class="${t.status === 'OPEN' ? 'status-open' : 'status-closed'}">${t.status}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('track-content').innerHTML = `
+    <div style="overflow-x:auto">
+      <table class="track-table">
+        <thead>
+          <tr>
+            <th>ETF</th><th>ENTRY DATE</th><th>ENTRY</th><th>STOP</th>
+            <th>EXIT DATE</th><th>EXIT</th><th>P&L</th><th>REASON</th><th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-signals').style.display = tab === 'signals' ? 'block' : 'none';
+  document.getElementById('tab-track').style.display   = tab === 'track'   ? 'block' : 'none';
+  if (tab === 'track') loadTrackRecord();
+}
+</script>
+</body>
+</html>

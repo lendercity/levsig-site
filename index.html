@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevSig — Daily Signals for Single-Stock Leveraged ETFs</title>
+<meta name="description" content="The only signal service built for leveraged ETFs. Proprietary multi-indicator system covering SOXL, MSTU, NVDX, ROBN, HIMZ and 25+ more.">
+<link rel="icon" type="image/png" href="levsig-favicon.png">
+<meta property="og:title" content="LevSig — Daily Signals for Leveraged ETFs">
+<meta property="og:description" content="Proprietary multi-indicator signals on SOXL, MSTU, NVDX, ROBN, HIMZ and 25+ more. Free tier available.">
+<meta property="og:image" content="https://levsig.com/levsig-thumbnail-1200x630.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://levsig.com/levsig-thumbnail-1200x630.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--green-bg:#F0FFF5;--red:#FF3B30;--red-bg:#FFF0EF;--amber:#FF9500;
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--black);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--black);border-radius:2px;transition:all .2s}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.98);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1.25rem;color:var(--black);text-decoration:none;font-family:var(--sans);font-weight:500}
+.mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--black)}
+.mobile-menu .m-cta{font-family:var(--mono);font-size:.85rem;font-weight:700;padding:.75rem 2rem;background:var(--black);color:var(--white);border-radius:4px;margin-top:1rem}
+.logo{font-family:var(--mono);font-size:1rem;font-weight:700;letter-spacing:-.02em;color:var(--black);text-decoration:none}
+.logo span{color:var(--green)}
+.nav-links{display:flex;gap:2rem;align-items:center;list-style:none}
+.nav-links a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.5rem 1.25rem;background:var(--black);color:var(--white)!important;border-radius:4px;text-decoration:none;transition:background .15s}
+.nav-cta:hover{background:var(--g700)!important}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.eyebrow{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:1.25rem}
+h1{font-family:var(--sans);font-size:clamp(2rem,4vw,3rem);font-weight:600;line-height:1.15;letter-spacing:-.03em;margin-bottom:1.25rem}
+h1 em{font-style:normal;color:var(--g500)}
+.hero-sub{font-size:1rem;color:var(--g700);line-height:1.7;margin-bottom:2rem;max-width:440px}
+.signup-row{display:flex;gap:.5rem;margin-bottom:.75rem}
+.signup-row input{flex:1;font-family:var(--sans);font-size:.9rem;padding:.75rem 1rem;border:1.5px solid var(--g200);border-radius:4px;outline:none;transition:border-color .15s;color:var(--black)}
+.signup-row input:focus{border-color:var(--black)}
+.signup-row input::placeholder{color:var(--g500)}
+.signup-row button{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.75rem 1.5rem;background:var(--black);color:var(--white);border:none;border-radius:4px;cursor:pointer;white-space:nowrap;transition:background .15s;letter-spacing:.02em}
+.signup-row button:hover{background:var(--g700)}
+.fine{font-size:.75rem;color:var(--g500)}
+
+/* TERMINAL */
+.terminal{background:var(--black);border-radius:8px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,.18)}
+.t-bar{background:#1A1A1A;padding:.75rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid #2A2A2A}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#FF5F57}.dy{background:#FFBD2E}.dg{background:#28CA41}
+.t-title{font-family:var(--mono);font-size:.7rem;color:#666;margin-left:auto;letter-spacing:.05em}
+.t-head{padding:1rem 1.25rem .5rem;display:grid;grid-template-columns:80px 70px 1fr 90px;gap:.5rem;border-bottom:1px solid #1E1E1E}
+.t-head span{font-family:var(--mono);font-size:.6rem;color:#555;letter-spacing:.08em;text-transform:uppercase}
+.feed{padding:.25rem 0;min-height:280px}
+.srow{display:grid;grid-template-columns:80px 70px 1fr 90px;gap:.5rem;padding:.6rem 1.25rem;border-bottom:1px solid #111;animation:fi .35s ease}
+.srow:hover{background:#141414}
+@keyframes fi{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.s-tick{font-family:var(--mono);font-size:.8rem;font-weight:700;color:#E8E8E8}
+.s-und{font-family:var(--mono);font-size:.7rem;color:#555;padding-top:1px}
+.s-act{font-family:var(--mono);font-size:.7rem;color:#888}
+.sbadge{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;text-align:center;letter-spacing:.04em;align-self:center}
+.se{background:rgba(0,200,83,.15);color:#00C853}
+.sh{background:rgba(255,149,0,.12);color:#FF9500}
+.sw{background:rgba(100,100,100,.15);color:#666}
+.sx{background:rgba(255,59,48,.15);color:#FF3B30}
+.t-foot{padding:.75rem 1.25rem;background:#0A0A0A;display:flex;justify-content:space-between;align-items:center}
+.t-foot span{font-family:var(--mono);font-size:.65rem;color:#444}
+.blink{display:inline-block;width:7px;height:13px;background:var(--green);animation:bl 1s step-end infinite;vertical-align:middle;margin-left:4px}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+
+/* TICKER TAPE */
+.tape{background:var(--black);padding:.6rem 0;overflow:hidden;border-top:1px solid #1A1A1A;border-bottom:1px solid #1A1A1A}
+.tape-inner{display:flex;gap:3rem;animation:scroll 30s linear infinite;width:max-content}
+.titem{font-family:var(--mono);font-size:.72rem;color:#666;white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+.titem .tt{color:#CCC;font-weight:700}
+.tg{color:var(--green)}.tr{color:var(--red)}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* STATS */
+.stats{max-width:1100px;margin:4rem auto;padding:0 2rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--g200);border:1px solid var(--g200);border-radius:8px;overflow:hidden}
+.scell{background:var(--white);padding:1.75rem 1.5rem;text-align:center}
+.snum{font-family:var(--mono);font-size:2rem;font-weight:700;display:block;line-height:1;margin-bottom:.4rem}
+.slabel{font-size:.8rem;color:var(--g500)}
+
+/* HOW */
+.how{max-width:1100px;margin:0 auto 5rem;padding:0 2rem}
+.sec-eyebrow{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.sec-title{font-size:1.75rem;font-weight:600;letter-spacing:-.02em;margin-bottom:3rem}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.hcard{border-top:2px solid var(--g200);padding-top:1.5rem}
+.hcard.accent{border-top-color:var(--green)}
+.hnum{font-family:var(--mono);font-size:.7rem;color:var(--g500);margin-bottom:1rem;letter-spacing:.06em}
+.htitle{font-size:1rem;font-weight:600;margin-bottom:.75rem}
+.hbody{font-size:.875rem;color:var(--g700);line-height:1.7}
+.hcode{margin-top:1rem;background:var(--g100);border-radius:4px;padding:.75rem 1rem;font-family:var(--mono);font-size:.7rem;color:var(--g700);line-height:1.8}
+.hcode .redacted{background:var(--black);color:var(--black);border-radius:2px;user-select:none;cursor:not-allowed}
+
+/* WHY */
+.why{background:var(--g100);padding:5rem 2rem;margin-bottom:5rem}
+.why-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.quote{border-left:3px solid var(--green);padding-left:1.5rem;margin-bottom:2rem}
+.quote p{font-size:1.25rem;font-weight:500;line-height:1.5;margin-bottom:.75rem}
+.quote cite{font-size:.8rem;color:var(--g500);font-style:normal;font-family:var(--mono)}
+.why-body{font-size:.9rem;color:var(--g700);line-height:1.8}
+.dcard{background:var(--white);border-radius:8px;padding:1.5rem;border:1px solid var(--g200)}
+.dtitle{font-family:var(--mono);font-size:.7rem;color:var(--g500);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.25rem}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--g100)}
+.drow:last-of-type{border-bottom:none}
+.detf{font-family:var(--mono);font-size:.85rem;font-weight:700}
+.drisk{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:3px}
+.rh{background:var(--red-bg);color:var(--red)}
+.rm{background:#FFF8EC;color:var(--amber)}
+.rl{background:var(--green-bg);color:var(--green)}
+.dnote{font-size:.75rem;color:var(--g500);margin-top:1rem}
+
+/* TRACK RECORD */
+.track{max-width:1100px;margin:0 auto 5rem;padding:0 2rem}
+.track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem}
+.tcard{border:1px solid var(--g200);border-radius:8px;padding:1.5rem}
+.tcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem}
+.tcard-etf{font-family:var(--mono);font-size:1rem;font-weight:700}
+.tcard-date{font-family:var(--mono);font-size:.65rem;color:var(--g500)}
+.tcard-signal{font-size:.75rem;color:var(--g700);margin-bottom:.75rem;line-height:1.6}
+.tcard-result{font-family:var(--mono);font-size:.85rem;font-weight:700}
+.res-win{color:var(--green)}
+.res-stop{color:var(--red)}
+.tcard-note{font-size:.7rem;color:var(--g500);margin-top:.4rem}
+
+/* PRICING */
+.pricing{max-width:900px;margin:0 auto 6rem;padding:0 2rem;text-align:center}
+.pricing-sub{font-size:.9rem;color:var(--g500);margin-bottom:3rem}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;text-align:left}
+.plan{border:1.5px solid var(--g200);border-radius:8px;padding:2rem;position:relative}
+.plan.feat{border-color:var(--black)}
+.pbadge{position:absolute;top:-11px;left:1.5rem;font-family:var(--mono);font-size:.65rem;font-weight:700;background:var(--black);color:var(--white);padding:2px 10px;border-radius:3px;letter-spacing:.06em}
+.pname{font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--g500);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem}
+.pprice{font-size:2.25rem;font-weight:600;letter-spacing:-.03em;margin-bottom:.25rem}
+.pprice span{font-size:.9rem;font-weight:400;color:var(--g500)}
+.pdesc{font-size:.8rem;color:var(--g500);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--g200)}
+.pfeats{list-style:none;margin-bottom:1.75rem}
+.pfeats li{font-size:.85rem;color:var(--g700);padding:.35rem 0;display:flex;align-items:flex-start;gap:.5rem}
+.pfeats li::before{content:'→';font-family:var(--mono);font-size:.75rem;color:var(--green);flex-shrink:0;margin-top:2px}
+.pbtn{display:block;width:100%;font-family:var(--mono);font-size:.75rem;font-weight:700;text-align:center;padding:.8rem;border-radius:4px;letter-spacing:.04em;transition:all .15s;cursor:pointer;border:none}
+.btn-out{background:transparent;color:var(--black);border:1.5px solid var(--g200)}
+.btn-out:hover{border-color:var(--black)}
+.btn-solid{background:var(--black);color:var(--white)}
+.btn-solid:hover{background:var(--g700)}
+
+/* FINAL CTA */
+.final{background:var(--black);padding:5rem 2rem;text-align:center}
+.final h2{font-size:2rem;font-weight:600;color:var(--white);letter-spacing:-.02em;margin-bottom:.75rem}
+.final p{color:#666;font-size:.9rem;margin-bottom:2rem}
+.final-form{display:flex;gap:.5rem;max-width:420px;margin:0 auto 1rem}
+.final-form input{flex:1;font-family:var(--sans);font-size:.9rem;padding:.75rem 1rem;border:1px solid #333;border-radius:4px;background:#111;color:var(--white);outline:none}
+.final-form input:focus{border-color:var(--green)}
+.final-form input::placeholder{color:#555}
+.final-form button{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.75rem 1.25rem;background:var(--green);color:var(--black);border:none;border-radius:4px;cursor:pointer;white-space:nowrap;letter-spacing:.02em}
+.final-fine{font-size:.75rem;color:#444}
+
+/* FOOTER */
+footer{padding:2rem;text-align:center;border-top:1px solid var(--g200)}
+footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;gap:2.5rem;padding:3rem 1.25rem 2.5rem}
+  h1{font-size:1.75rem}
+  .signup-row{flex-direction:column;width:100%}
+  .signup-row input{width:100%;min-width:0;font-size:1rem;padding:.875rem 1rem}
+  .signup-row button{width:100%;padding:.875rem;font-size:.85rem}
+  .final-form{flex-direction:column;width:100%;max-width:100%;padding:0 1.25rem}
+  .final-form input{width:100%;min-width:0;font-size:1rem;padding:.875rem 1rem}
+  .final-form button{width:100%;padding:.875rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .how-grid,.why-inner,.pgrid,.track-grid{grid-template-columns:1fr}
+  nav{padding:1rem 1.25rem}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-sub{font-size:.9rem}
+  .how,.track,.pricing{padding:0 1.25rem}
+  .why{padding:3rem 1.25rem}
+  .final{padding:3rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Hidden Netlify form for detection -->
+<form name="levsig-signup" netlify netlify-honeypot="bot-field" hidden>
+  <input type="email" name="email">
+</form>
+
+<nav>
+  <a href="#" class="logo">
+    <svg width="155" height="44" viewBox="0 0 155 44" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <!-- Bars left -->
+      <rect x="0"  y="24" width="7" height="14" rx="2" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="11" y="17" width="7" height="21" rx="2" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="22" y="8"  width="7" height="30" rx="2" fill="#00C853"/>
+      <!-- Wordmark aligned to bottom of bars -->
+      <text x="34" y="38" font-family="Space Mono,monospace" font-size="22" font-weight="700" fill="#0D0D0D" letter-spacing="-1.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#track">Track record</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="/members.html" style="font-size:.875rem;color:var(--g500);text-decoration:none;">Member Login</a></li>
+    <li><a href="#pricing" class="nav-cta">GET FREE SIGNALS</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="close-btn" onclick="toggleMenu()">✕</button>
+  <a href="#how" onclick="toggleMenu()">How it works</a>
+  <a href="#track" onclick="toggleMenu()">Track record</a>
+  <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/members.html">Member Login</a>
+  <a href="#pricing" class="m-cta" onclick="toggleMenu()">GET FREE SIGNALS</a>
+</div>
+</nav>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">Proprietary signal service for leveraged ETF traders</p>
+    <h1>Finally.<br><em>Signals built for</em><br>leveraged ETFs.</h1>
+    <p class="hero-sub">Daily multi-indicator signals on SOXL, MSTU, NVDX, ROBN, HIMZ and 25+ leveraged ETFs. Every signal includes an entry price, ATR stop, and decay risk rating. Delivered after market close.</p>
+    <div class="signup-row">
+      <input type="email" placeholder="your@email.com" id="hero-email">
+      <button onclick="signup('hero-email')">GET FREE SIGNALS</button>
+    </div>
+    <p class="fine" style="margin-top:.5rem">Free tier covers 10 ETFs. No credit card required.</p>
+
+  </div>
+
+  <div class="terminal" role="img" aria-label="Live LevSig signal feed">
+    <div class="t-bar">
+      <div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div>
+      <span class="t-title">levsig — daily feed</span>
+    </div>
+    <div class="t-head">
+      <span>ETF</span><span>SIGNAL SOURCE</span><span>ACTION</span><span>STATUS</span>
+    </div>
+    <div class="feed" id="feed"></div>
+    <div class="t-foot">
+      <span>21 underlyings · 29 ETFs</span>
+      <span>after market close<div class="blink"></div></span>
+    </div>
+  </div>
+</section>
+
+<div class="tape" aria-hidden="true"><div class="tape-inner" id="tape"></div></div>
+
+<div class="stats">
+  <div class="scell"><span class="snum">29</span><span class="slabel">ETFs tracked</span></div>
+  <div class="scell"><span class="snum">24</span><span class="slabel">Unique underlyings</span></div>
+  <div class="scell"><span class="snum">7</span><span class="slabel">Sectors covered</span></div>
+  <div class="scell"><span class="snum">Daily</span><span class="slabel">Signal delivery</span></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <p class="sec-eyebrow">Signal methodology</p>
+  <h2 class="sec-title">Proprietary system. Backtested results.<br>Not opinions.</h2>
+  <div class="how-grid">
+    <div class="hcard accent">
+      <p class="hnum">ENTRY CONDITION</p>
+      <h3 class="htitle">All indicators must align</h3>
+      <p class="hbody">No partial signals. Our proprietary multi-indicator system requires full confirmation across trend, momentum, and volatility before an entry signal triggers. One indicator alone is never enough.</p>
+      <div class="hcode">
+        Trend indicator ✓<br>
+        Momentum indicator ✓<br>
+        Volatility filter ✓<br>
+        ──────────────────<br>
+        STATUS: ENTRY
+      </div>
+    </div>
+    <div class="hcard">
+      <p class="hnum">RISK MANAGEMENT</p>
+      <h3 class="htitle">ATR stop on every signal</h3>
+      <p class="hbody">Every entry signal includes a specific stop-loss price derived from Average True Range volatility. Not "manage your risk" — an actual dollar level calculated from current market conditions.</p>
+      <div class="hcode">
+        Entry price: $47.20<br>
+        ATR-derived stop: $43.93<br>
+        Max risk defined: ✓<br>
+        ──────────────────<br>
+        Set it. Honor it.
+      </div>
+    </div>
+    <div class="hcard">
+      <p class="hnum">SIGNAL ARCHITECTURE</p>
+      <h3 class="htitle">Underlying chart. ETF execution.</h3>
+      <p class="hbody">Signals run on the underlying stock — clean, unaffected by daily decay distortion. One signal covers every mapped leveraged ETF on that underlying. You choose the instrument.</p>
+      <div class="hcode">
+        Signal source: HIMS<br>
+        Mapped ETF: HIMZ<br>
+        Decay risk: HIGH<br>
+        ──────────────────<br>
+        One signal. Your call.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why">
+  <div class="why-inner">
+    <div>
+      <p class="sec-eyebrow">The problem</p>
+      <h2 class="sec-title" style="margin-bottom:1.5rem">Most traders hold leveraged ETFs the wrong way.</h2>
+      <div class="quote">
+        <p>"I bought a leveraged ETF because it was cheaper than the stock. Down 60% now."</p>
+        <cite>— A real LevSig subscriber</cite>
+      </div>
+      <p class="why-body">Single-stock leveraged ETFs bleed value in choppy markets. The 2× or 3× exposure works against you just as hard as it works for you — and daily rebalancing erodes principal every day you're on the wrong side or standing still. Most people holding these instruments have no defined entry, no stop, and no system. LevSig fixes that.</p>
+    </div>
+    <div>
+      <div class="dcard">
+        <p class="dtitle">Decay risk by ETF</p>
+        <div class="drow"><span class="detf">SOXL</span><span class="drisk rh">HIGH — 3× index</span></div>
+        <div class="drow"><span class="detf">MSTU</span><span class="drisk rh">HIGH — 2× MSTR vol</span></div>
+        <div class="drow"><span class="detf">HIMZ</span><span class="drisk rh">HIGH — 2× biotech</span></div>
+        <div class="drow"><span class="detf">NVDX</span><span class="drisk rm">MEDIUM — 2× NVDA</span></div>
+        <div class="drow"><span class="detf">ROBN</span><span class="drisk rm">MEDIUM — 2× HOOD</span></div>
+        <div class="drow"><span class="detf">TSLT</span><span class="drisk rm">MEDIUM — 2× TSLA</span></div>
+        <div class="drow"><span class="detf">PLTU</span><span class="drisk rl">LOW — 2× PLTR</span></div>
+        <p class="dnote">Decay risk is calculated from leverage factor and current ATR volatility. Included with every signal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK RECORD -->
+<section class="track" id="track">
+  <p class="sec-eyebrow">Public track record</p>
+  <h2 class="sec-title">Every signal logged. Every result published.<br>Judge us by results.</h2>
+  <div class="track-grid">
+    <div class="tcard">
+      <div class="tcard-top">
+        <span class="tcard-etf">SOXL</span>
+        <span class="tcard-date">Sample signal</span>
+      </div>
+      <p class="tcard-signal">Entry triggered on SOXX underlying. All indicators aligned. ATR stop set below entry. Held through trend continuation.</p>
+      <p class="tcard-result res-win">+31.4% — Exit on RSI signal</p>
+      <p class="tcard-note">Stop never touched. Clean exit.</p>
+    </div>
+    <div class="tcard">
+      <div class="tcard-top">
+        <span class="tcard-etf">NVDX</span>
+        <span class="tcard-date">Sample signal</span>
+      </div>
+      <p class="tcard-signal">Entry on NVDA underlying. Full indicator alignment confirmed. ATR stop defined at entry. Exited when momentum indicator signaled overbought.</p>
+      <p class="tcard-result res-win">+18.7% — RSI exit signal</p>
+      <p class="tcard-note">Held 11 trading days.</p>
+    </div>
+    <div class="tcard">
+      <div class="tcard-top">
+        <span class="tcard-etf">TSLT</span>
+        <span class="tcard-date">Sample signal</span>
+      </div>
+      <p class="tcard-signal">Entry on TSLA underlying. Indicators aligned but momentum faded early. ATR stop triggered protecting capital. Discipline over hope.</p>
+      <p class="tcard-result res-stop">−8.2% — ATR stop triggered</p>
+      <p class="tcard-note">Stop worked as designed. Loss contained.</p>
+    </div>
+  </div>
+  <p style="font-size:.8rem;color:var(--g500);margin-top:1.5rem;text-align:center">Live signal history published from day one. Every entry, every exit, timestamped. Past results do not guarantee future performance.</p>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <p class="sec-eyebrow">Pricing</p>
+  <h2 class="sec-title">Start free. Upgrade when you're ready.</h2>
+  <p class="pricing-sub">No lock-in. Cancel anytime. Your first signal is free.</p>
+  <div class="pgrid">
+    <div class="plan">
+      <p class="pname">Free</p>
+      <p class="pprice">$0 <span>/ month</span></p>
+      <p class="pdesc">Core signals on the 10 highest-volume leveraged ETFs.</p>
+      <ul class="pfeats">
+        <li>SOXL, NVDX, NVDU, TSLT, MSTU, CONL, ROBN, HIMZ, LOFF, SPAX</li>
+        <li>Daily email after market close</li>
+        <li>Entry signal with ATR stop price</li>
+        <li>RSI overbought exit alerts</li>
+        <li>Decay risk rating per ETF</li>
+      </ul>
+      <button class="pbtn btn-out" onclick="scrollToFinal()">START FREE</button>
+    </div>
+    <div class="plan feat">
+      <div class="pbadge">MOST POPULAR</div>
+      <p class="pname">Pro</p>
+      <p class="pprice">$49 <span>/ month</span></p>
+      <p class="pdesc">Full universe — every ETF, real-time alerts, custom watchlist.</p>
+      <ul class="pfeats">
+        <li>All 29 ETFs across 21 underlyings</li>
+        <li>Real-time alerts — no delay</li>
+        <li>Add up to 10 custom tickers</li>
+        <li>Earnings risk calendar — flag binary events before entry</li>
+        <li>Full signal history and win rate data</li>
+        <li>Sector rotation dashboard</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="pbtn btn-solid" onclick="scrollToFinal()">START FREE → UPGRADE</button>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <h2>Get your first signal today.</h2>
+  <p>Free. No card. Takes 10 seconds.</p>
+  <div class="final-form">
+    <input type="email" placeholder="your@email.com" id="final-email">
+    <button onclick="signup('final-email')">SUBSCRIBE FREE</button>
+  </div>
+  <p class="final-fine">Unsubscribe anytime. We never sell your email.</p>
+</section>
+
+<footer>
+  <p>© 2026 <strong>LevSig</strong> · levsig.com<br>
+  Technical analysis only — not investment advice. Single-stock leveraged ETFs carry significant risk of loss.<br>
+  Past signals do not guarantee future results. Always consult a licensed financial advisor before trading.</p>
+</footer>
+
+<script>
+const signals=[
+  {etf:'TQQQ',u:'QQQ', act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'TECL',u:'XLK', act:'ATR stop active · trend intact',st:'HOLD',cls:'sh'},
+  {etf:'SOXL',u:'SOXX',act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'NVDX',u:'NVDA',act:'ATR stop active · trend intact',st:'HOLD',cls:'sh'},
+  {etf:'MSTU',u:'MSTR',act:'Momentum overbought · exit',st:'RSI EXIT',cls:'sx'},
+  {etf:'ROBN',u:'HOOD',act:'Indicators not aligned',st:'WAIT',cls:'sw'},
+  {etf:'HIMZ',u:'HIMS',act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'TSLT',u:'TSLA',act:'ATR stop active · RSI neutral',st:'HOLD',cls:'sh'},
+  {etf:'TQQQ',u:'QQQ', act:'Momentum negative · no signal',st:'WAIT',cls:'sw'},
+  {etf:'TECL',u:'XLK', act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'LOFF',u:'SPCX',act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'PLTU',u:'PLTR',act:'Momentum approaching exit',st:'HOLD',cls:'sh'},
+];
+
+const feed=document.getElementById('feed');
+let count=0;
+const max=6;
+
+function addRow(s){
+  const r=document.createElement('div');
+  r.className='srow';
+  r.innerHTML=`<span class="s-tick">${s.etf}</span><span class="s-und">${s.u}</span><span class="s-act">${s.act}</span><span class="sbadge ${s.cls}">${s.st}</span>`;
+  feed.insertBefore(r,feed.firstChild);
+  count++;
+  if(count>max){feed.removeChild(feed.lastChild);count--}
+}
+
+signals.slice(0,max).forEach((s,i)=>setTimeout(()=>addRow(s),i*180));
+let idx=max;
+setInterval(()=>{addRow(signals[idx%signals.length]);idx++},3200);
+
+const tapeData=[
+  {t:'TQQQ',v:'+3.1%',c:'tg'},{t:'TECL',v:'+2.8%',c:'tg'},
+  {t:'SOXL',v:'+2.4%',c:'tg'},{t:'NVDX',v:'+1.8%',c:'tg'},{t:'MSTU',v:'-3.1%',c:'tr'},
+  {t:'ROBN',v:'+4.2%',c:'tg'},{t:'HIMZ',v:'+8.9%',c:'tg'},{t:'TSLT',v:'+0.6%',c:'tg'},
+  {t:'TQQQ',v:'-1.4%',c:'tr'},{t:'TECL',v:'+5.3%',c:'tg'},{t:'LOFF',v:'+5.3%',c:'tg'},
+  {t:'PLTU',v:'+2.1%',c:'tg'},{t:'NVDU',v:'+1.9%',c:'tg'},{t:'SNDU',v:'+6.7%',c:'tg'},
+  {t:'MUU', v:'+3.4%',c:'tg'},{t:'AAPX',v:'-0.8%',c:'tr'},{t:'CRWU',v:'+7.2%',c:'tg'},
+];
+const tape=document.getElementById('tape');
+[...tapeData,...tapeData].forEach(d=>{
+  const el=document.createElement('span');
+  el.className='titem';
+  el.innerHTML=`<span class="tt">${d.t}</span> <span class="${d.c}">${d.v}</span>`;
+  tape.appendChild(el);
+});
+
+async function signup(id){
+  const inp = document.getElementById(id);
+  const btn = inp.nextElementSibling;
+  const email = inp.value.trim();
+
+  if(!email || !email.includes('@')){
+    inp.style.borderColor='#FF3B30';
+    inp.focus();
+    return;
+  }
+
+  const originalText = btn.textContent;
+  btn.textContent = 'SIGNING UP...';
+  btn.disabled = true;
+  inp.disabled = true;
+
+  try {
+    // Use Netlify Forms
+    const formData = new FormData();
+    formData.append('form-name', 'levsig-signup');
+    formData.append('email', email);
+
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString()
+    });
+
+    if (response.ok) {
+      inp.style.borderColor = '#00C853';
+      inp.value = '';
+      inp.placeholder = "✓ You're on the list — signals start today";
+      btn.textContent = '✓ SUBSCRIBED';
+      btn.style.background = '#00C853';
+      btn.style.color = '#0D0D0D';
+    } else {
+      throw new Error('Form submission failed');
+    }
+  } catch(e) {
+    inp.style.borderColor = '#FF3B30';
+    btn.textContent = originalText;
+    btn.disabled = false;
+    inp.disabled = false;
+  }
+}
+
+function scrollToFinal(){
+  document.querySelector('.final').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>document.getElementById('final-email').focus(),600);
+}
+
+document.querySelectorAll('input[type="email"]').forEach(inp=>{
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')signup(inp.id)});
+});
+
+function toggleMenu(){
+  const menu = document.getElementById('mobile-menu');
+  menu.classList.toggle('open');
+  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+}
+</script>
+</body>
+</html>
