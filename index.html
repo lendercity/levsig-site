@@ -500,16 +500,13 @@ async function signup(id){
   inp.disabled = true;
 
   try {
-    // Use Netlify Forms
-    const formData = new FormData();
-    formData.append('form-name', 'levsig-signup');
-    formData.append('email', email);
-
-    const response = await fetch('/', {
+    const response = await fetch('https://formspree.io/f/REPLACE_WITH_FORMSPREE_ID', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData).toString()
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email })
     });
+
+    const data = await response.json();
 
     if (response.ok) {
       inp.style.borderColor = '#00C853';
@@ -519,7 +516,7 @@ async function signup(id){
       btn.style.background = '#00C853';
       btn.style.color = '#0D0D0D';
     } else {
-      throw new Error('Form submission failed');
+      throw new Error('Signup failed');
     }
   } catch(e) {
     inp.style.borderColor = '#FF3B30';
