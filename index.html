@@ -222,16 +222,17 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     <span></span><span></span><span></span>
   </button>
 
-<!-- Mobile menu -->
+</nav>
+
+<!-- Mobile menu — outside nav so it covers full screen -->
 <div class="mobile-menu" id="mobile-menu">
   <button class="close-btn" onclick="toggleMenu()">✕</button>
   <a href="#how" onclick="toggleMenu()">How it works</a>
   <a href="/track.html" onclick="toggleMenu()">Track record</a>
   <a href="#pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="/members.html">Member Login</a>
+  <a href="/members.html" onclick="toggleMenu()">Member Login</a>
   <a href="#pricing" class="m-cta" onclick="toggleMenu()">GET FREE SIGNALS</a>
 </div>
-</nav>
 
 <section class="hero">
   <div>
