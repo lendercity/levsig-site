@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevSig — Track Record</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--red:#FF3B30;--amber:#FF9500;--yellow:#FFB800;
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.nav-logo{text-decoration:none;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-right a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:.5rem 1rem;background:var(--black);color:var(--white);border-radius:4px;text-decoration:none}
+
+/* HERO */
+.hero{background:var(--black);padding:3.5rem 2rem 3rem;text-align:center}
+.hero-eyebrow{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-size:2rem;font-weight:600;color:var(--white);letter-spacing:-.02em;margin-bottom:.75rem}
+.hero-sub{font-size:.9rem;color:#666;max-width:520px;margin:0 auto 2rem}
+.live-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.7rem;color:var(--green);border:1px solid rgba(0,200,83,.3);border-radius:20px;padding:.3rem .75rem}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* STATS BAR */
+.stats-bar{background:#0A0A0A;border-bottom:1px solid #1a1a1a;padding:1.5rem 2rem}
+.stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1.5rem}
+.stat{text-align:center}
+.stat-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;display:block;line-height:1;margin-bottom:.3rem}
+.stat-val.green{color:var(--green)}
+.stat-val.red{color:var(--red)}
+.stat-val.white{color:var(--white)}
+.stat-label{font-family:var(--mono);font-size:.6rem;color:#555;letter-spacing:.08em;text-transform:uppercase}
+
+/* MAIN */
+.main{max-width:1000px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+/* Section label */
+.section-label{font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--g500);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem}
+.section-label::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+/* Open positions */
+.open-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin-bottom:2.5rem}
+.open-card{background:var(--g100);border:1px solid var(--g200);border-radius:8px;padding:1.25rem;border-left:3px solid var(--green)}
+.open-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+.open-ticker{font-family:var(--mono);font-size:1.1rem;font-weight:700}
+.open-underlying{font-family:var(--mono);font-size:.65rem;color:var(--g500);display:block;margin-top:2px}
+.open-pnl{font-family:var(--mono);font-size:1rem;font-weight:700}
+.open-pnl.pos{color:var(--green)}
+.open-pnl.neg{color:var(--red)}
+.open-meta{font-family:var(--mono);font-size:.65rem;color:var(--g500);display:flex;gap:1rem;flex-wrap:wrap}
+.open-meta span strong{color:var(--black)}
+
+/* Trade history table */
+.table-wrap{overflow-x:auto;margin-bottom:2rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead th{font-family:var(--mono);font-size:.6rem;color:var(--g500);text-align:left;padding:.6rem .75rem;border-bottom:2px solid var(--g200);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+tbody td{font-family:var(--mono);font-size:.75rem;padding:.7rem .75rem;border-bottom:1px solid var(--g100);color:var(--black)}
+tbody tr:hover td{background:var(--g100)}
+.pnl-pos{color:var(--green);font-weight:700}
+.pnl-neg{color:var(--red);font-weight:700}
+.status-open{color:var(--amber);font-weight:700}
+.exit-atr{color:var(--red)}
+.exit-rsi{color:var(--amber)}
+.conf-high{color:var(--green)}
+.conf-med{color:var(--amber)}
+
+/* Empty state */
+.empty{text-align:center;padding:4rem 2rem;font-family:var(--mono);font-size:.8rem;color:var(--g500)}
+
+/* Loading */
+.loading{text-align:center;padding:3rem;font-family:var(--mono);font-size:.8rem;color:var(--g500)}
+
+/* Disclaimer */
+.disclaimer{background:var(--g100);border-radius:8px;padding:1.25rem 1.5rem;margin-top:2rem}
+.disclaimer p{font-size:.8rem;color:var(--g500);line-height:1.7}
+.disclaimer a{color:var(--g500)}
+
+/* Footer */
+footer{background:var(--black);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:#444;line-height:1.8}
+footer a{color:#555;text-decoration:none}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .hero{padding:2.5rem 1rem 2rem}
+  .stats-inner{grid-template-columns:repeat(3,1fr);gap:1rem}
+  .stat-val{font-size:1.25rem}
+  .main{padding:1.5rem 1rem 3rem}
+  .open-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="135" height="32" viewBox="0 0 135 32" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <rect x="0"  y="18" width="5" height="10" rx="1.5" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="8"  y="13" width="5" height="15" rx="1.5" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="16" y="6"  width="5" height="22" rx="1.5" fill="#00C853"/>
+      <text x="27" y="22" font-family="Space Mono,monospace" font-size="15" font-weight="700" fill="#0D0D0D" letter-spacing="-0.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <div class="nav-right">
+    <a href="/">Home</a>
+    <a href="/members.html">Member Login</a>
+    <a href="/" class="nav-cta">GET FREE SIGNALS</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <p class="hero-eyebrow">Performance</p>
+  <h1 class="hero-title">Live Track Record</h1>
+  <p class="hero-sub">Every signal logged from day one. Wins and losses both. No cherry-picking.</p>
+  <span class="live-badge"><span class="live-dot"></span>Updated daily after market close</span>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stats-inner" id="stats-bar">
+    <div class="stat"><span class="stat-val white" id="stat-trades">—</span><span class="stat-label">Total Trades</span></div>
+    <div class="stat"><span class="stat-val white" id="stat-winrate">—</span><span class="stat-label">Win Rate</span></div>
+    <div class="stat"><span class="stat-val white" id="stat-avgwin">—</span><span class="stat-label">Avg Win</span></div>
+    <div class="stat"><span class="stat-val white" id="stat-avgloss">—</span><span class="stat-label">Avg Loss</span></div>
+    <div class="stat"><span class="stat-val white" id="stat-pf">—</span><span class="stat-label">Profit Factor</span></div>
+    <div class="stat"><span class="stat-val white" id="stat-open">—</span><span class="stat-label">Open Positions</span></div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="main">
+
+  <!-- Open positions -->
+  <div id="open-section" style="display:none">
+    <p class="section-label" style="margin-bottom:.75rem">Open positions</p>
+    <div class="open-grid" id="open-grid"></div>
+  </div>
+
+  <!-- Trade history -->
+  <p class="section-label">Signal history</p>
+  <div id="history-content"><div class="loading">Loading track record...</div></div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <p>All performance data shown represents actual signals published by LevSig LLC since launch. Entry and exit prices are based on closing prices on the signal date. Results do not account for trading commissions, slippage, or taxes. Past performance does not guarantee future results. Leveraged ETFs carry significant risk of loss. <a href="/terms.html">Full disclaimer →</a></p>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 LevSig LLC · State of Florida · <a href="/">levsig.com</a> · <a href="/terms.html">Terms of Service</a></p>
+</footer>
+
+<script>
+const SUPABASE_URL  = 'https://wydsszcuqtwnikugeezo.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5ZHNzemN1cXR3bmlrdWdlZXpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNDQ5MDIsImV4cCI6MjA5NzcyMDkwMn0.qafYg_nLbL1H0dJDkyPWQ-9X08NlQ4K1xzgA-fN16aE';
+
+let supabase;
+
+window.addEventListener('load', async () => {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  await loadTrackRecord();
+});
+
+async function loadTrackRecord() {
+  // Fetch all track record entries
+  const { data, error } = await supabase
+    .from('track_record')
+    .select('*')
+    .order('entry_date', { ascending: false })
+    .limit(200);
+
+  if (error) {
+    document.getElementById('history-content').innerHTML =
+      '<div class="empty">Track record will appear here after the first signals complete.</div>';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    document.getElementById('history-content').innerHTML =
+      '<div class="empty">Track record builds as signals are published daily after market close.<br>Check back after 4:30pm ET on trading days.</div>';
+    updateStats([], []);
+    return;
+  }
+
+  const closed = data.filter(t => t.status === 'CLOSED');
+  const open   = data.filter(t => t.status === 'OPEN');
+
+  updateStats(closed, open);
+  renderOpenPositions(open);
+  renderHistory(data);
+}
+
+function updateStats(closed, open) {
+  const wins   = closed.filter(t => t.pnl_pct > 0);
+  const losses = closed.filter(t => t.pnl_pct <= 0);
+  const winRate = closed.length ? (wins.length / closed.length * 100).toFixed(1) : '—';
+  const avgWin  = wins.length   ? (wins.reduce((s,t)   => s + parseFloat(t.pnl_pct), 0) / wins.length).toFixed(1)   : '—';
+  const avgLoss = losses.length ? (losses.reduce((s,t) => s + parseFloat(t.pnl_pct), 0) / losses.length).toFixed(1) : '—';
+  const grossWin  = wins.reduce((s,t)   => s + parseFloat(t.pnl_pct), 0);
+  const grossLoss = Math.abs(losses.reduce((s,t) => s + parseFloat(t.pnl_pct), 0));
+  const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : grossWin > 0 ? '∞' : '—';
+
+  const wr = document.getElementById('stat-winrate');
+  wr.textContent = closed.length ? winRate + '%' : '—';
+  wr.className = `stat-val ${parseFloat(winRate) >= 50 ? 'green' : closed.length ? 'red' : 'white'}`;
+
+  document.getElementById('stat-trades').textContent = closed.length || '—';
+  document.getElementById('stat-trades').className = 'stat-val white';
+
+  const aw = document.getElementById('stat-avgwin');
+  aw.textContent = avgWin !== '—' ? '+' + avgWin + '%' : '—';
+  aw.className = `stat-val ${avgWin !== '—' ? 'green' : 'white'}`;
+
+  const al = document.getElementById('stat-avgloss');
+  al.textContent = avgLoss !== '—' ? avgLoss + '%' : '—';
+  al.className = `stat-val ${avgLoss !== '—' ? 'red' : 'white'}`;
+
+  const pfEl = document.getElementById('stat-pf');
+  pfEl.textContent = pf;
+  pfEl.className = `stat-val ${parseFloat(pf) >= 2 ? 'green' : parseFloat(pf) >= 1.5 ? 'white' : pf !== '—' ? 'red' : 'white'}`;
+
+  document.getElementById('stat-open').textContent = open.length || '0';
+  document.getElementById('stat-open').className = 'stat-val white';
+}
+
+function renderOpenPositions(open) {
+  if (open.length === 0) return;
+  const section = document.getElementById('open-section');
+  const grid    = document.getElementById('open-grid');
+  section.style.display = 'block';
+
+  grid.innerHTML = open.map(t => {
+    const days = Math.floor((new Date() - new Date(t.entry_date)) / (1000*60*60*24));
+    return `
+    <div class="open-card">
+      <div class="open-card-top">
+        <div>
+          <span class="open-ticker">${t.etf_ticker}</span>
+          <span class="open-underlying">${t.underlying}</span>
+        </div>
+        <span class="open-pnl ${t.pnl_pct >= 0 ? 'pos' : 'neg'}">
+          ${t.pnl_pct !== null ? (t.pnl_pct > 0 ? '+' : '') + parseFloat(t.pnl_pct).toFixed(1) + '%' : 'OPEN'}
+        </span>
+      </div>
+      <div class="open-meta">
+        <span>Entry <strong>$${t.entry_price || '—'}</strong></span>
+        <span>Stop <strong>$${t.stop_price || '—'}</strong></span>
+        <span>Day <strong>${days}</strong></span>
+        ${t.confidence ? `<span>Conf <strong>${t.confidence}</strong></span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHistory(data) {
+  if (data.length === 0) {
+    document.getElementById('history-content').innerHTML = '<div class="empty">No completed trades yet.</div>';
+    return;
+  }
+
+  const rows = data.map(t => {
+    const pnlClass = t.status === 'OPEN' ? 'status-open' : t.pnl_pct > 0 ? 'pnl-pos' : 'pnl-neg';
+    const pnlText  = t.status === 'OPEN' ? 'OPEN' : t.pnl_pct !== null ? (t.pnl_pct > 0 ? '+' : '') + parseFloat(t.pnl_pct).toFixed(1) + '%' : '—';
+    const exitClass = t.exit_reason === 'ATR_STOP' ? 'exit-atr' : t.exit_reason === 'RSI_EXIT' ? 'exit-rsi' : '';
+    const confClass = t.confidence === 'HIGH' || t.confidence === 'MED-HIGH' ? 'conf-high' : 'conf-med';
+    const days = t.holding_days || (t.exit_date ? Math.floor((new Date(t.exit_date) - new Date(t.entry_date)) / (1000*60*60*24)) : '—');
+
+    return `<tr>
+      <td><strong>${t.etf_ticker}</strong></td>
+      <td style="color:#888">${t.underlying}</td>
+      <td>${t.entry_date}</td>
+      <td>$${t.entry_price || '—'}</td>
+      <td>$${t.stop_price || '—'}</td>
+      <td>${t.exit_date || '—'}</td>
+      <td>${t.exit_price ? '$' + t.exit_price : '—'}</td>
+      <td class="${pnlClass}">${pnlText}</td>
+      <td>${days}d</td>
+      <td class="${exitClass}">${t.exit_reason ? t.exit_reason.replace('_', ' ') : t.status === 'OPEN' ? '—' : '—'}</td>
+      <td class="${confClass}">${t.confidence || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('history-content').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ETF</th>
+            <th>Underlying</th>
+            <th>Entry Date</th>
+            <th>Entry $</th>
+            <th>Stop $</th>
+            <th>Exit Date</th>
+            <th>Exit $</th>
+            <th>P&L</th>
+            <th>Days</th>
+            <th>Exit Reason</th>
+            <th>Confidence</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+</script>
+</body>
+</html>
