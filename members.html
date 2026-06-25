@@ -204,7 +204,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
     <div class="dash-nav-right">
       <span class="dash-email" id="user-email"></span>
       <span class="dash-tier" id="user-tier">FREE</span>
-      <a href="/track.html" style="font-family:var(--mono);font-size:.7rem;color:var(--g500);text-decoration:none;">Track Record</a>
+      <a href="/track.html" style="font-family:var(--mono);font-size:.7rem;color:var(--g500);text-decoration:none;">Performance</a>
       <button class="logout-btn" onclick="handleLogout()">Sign out</button>
     </div>
     <button class="dash-hamburger" onclick="toggleDashMenu()" aria-label="Menu">
@@ -215,7 +215,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
 <div class="dash-mobile-menu" id="dash-mobile-menu">
   <button class="dm-close" onclick="toggleDashMenu()">✕</button>
   <a href="#" onclick="switchTab('signals', document.querySelector('.tab'));toggleDashMenu()">Today's Signals</a>
-  <a href="#" onclick="switchTab('track', document.querySelectorAll('.tab')[1]);toggleDashMenu()">Track Record</a>
+  <a href="#" onclick="switchTab('track', document.querySelectorAll('.tab')[1]);toggleDashMenu()">Performance</a>
   <button onclick="handleLogout()">Sign out</button>
 </div>
   </nav>
@@ -233,7 +233,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" onclick="switchTab('signals', this)">Today's Signals</button>
-      <button class="tab" onclick="switchTab('track', this)">Track Record</button>
+      <button class="tab" onclick="switchTab('track', this)">Performance</button>
     </div>
 
     <!-- ── SIGNALS TAB ──────────────────────────────────────────────────── -->
