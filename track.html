@@ -312,16 +312,37 @@ async function loadTrackRecord() {
 function updateStats(closed, open) {
   const wins   = closed.filter(t => t.pnl_pct > 0);
   const losses = closed.filter(t => t.pnl_pct <= 0);
-  const winRate = closed.length ? (wins.length / closed.length * 100).toFixed(1) : '—';
-  const avgWin  = wins.length   ? (wins.reduce((s,t)   => s + parseFloat(t.pnl_pct), 0) / wins.length).toFixed(1)   : '—';
-  const avgLoss = losses.length ? (losses.reduce((s,t) => s + parseFloat(t.pnl_pct), 0) / losses.length).toFixed(1) : '—';
+  const avgWin  = wins.length   ? (wins.reduce((s,t)   => s + parseFloat(t.pnl_pct), 0) / wins.length).toFixed(1)   : null;
+  const avgLoss = losses.length ? (losses.reduce((s,t) => s + parseFloat(t.pnl_pct), 0) / losses.length).toFixed(1) : null;
   const grossWin  = wins.reduce((s,t)   => s + parseFloat(t.pnl_pct), 0);
   const grossLoss = Math.abs(losses.reduce((s,t) => s + parseFloat(t.pnl_pct), 0));
-  const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : grossWin > 0 ? '∞' : '—';
+  const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : null;
+
+  // Win/Loss Ratio — only meaningful when we have both wins and losses
+  const ratio = avgWin && avgLoss ? (parseFloat(avgWin) / Math.abs(parseFloat(avgLoss))).toFixed(2) + 'x' : null;
 
   const wr = document.getElementById('stat-winrate');
-  wr.textContent = closed.length ? winRate + '%' : '—';
-  wr.className = `stat-val ${parseFloat(winRate) >= 50 ? 'green' : closed.length ? 'red' : 'white'}`;
+  wr.textContent = ratio || 'Building...';
+  wr.className = ratio ? 'stat-val green' : 'stat-val white';
+
+  document.getElementById('stat-trades').textContent = closed.length || '0';
+  document.getElementById('stat-trades').className = 'stat-val white';
+
+  const aw = document.getElementById('stat-avgwin');
+  aw.textContent = avgWin ? '+' + avgWin + '%' : 'Building...';
+  aw.className = avgWin ? 'stat-val green' : 'stat-val white';
+
+  const al = document.getElementById('stat-avgloss');
+  al.textContent = avgLoss ? avgLoss + '%' : 'Building...';
+  al.className = avgLoss ? 'stat-val red' : 'stat-val white';
+
+  const pfEl = document.getElementById('stat-pf');
+  pfEl.textContent = pf || 'Building...';
+  pfEl.className = pf && parseFloat(pf) >= 2 ? 'stat-val green' : pf ? 'stat-val white' : 'stat-val white';
+
+  document.getElementById('stat-open').textContent = open.length || '0';
+  document.getElementById('stat-open').className = 'stat-val white';
+}`;
 
   document.getElementById('stat-trades').textContent = closed.length || '—';
   document.getElementById('stat-trades').className = 'stat-val white';
