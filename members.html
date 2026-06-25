@@ -275,7 +275,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">HIGH</strong> — Index-based (TQQQ, TECL, SOXL, UPRO)</span>
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">MED-HIGH</strong> — Large cap single stock (NVDA, AAPL, MSFT)</span>
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — Mid-tier single stock (HOOD, HIMS, COIN)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">LOW</strong> — Speculative or thin liquidity (UBER, DKNG)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">LOWER</strong> — Speculative or thin liquidity (UBER, DKNG)</span>
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">CAUTION</strong> — Earnings within 5 trading days</span>
         </div>
       </div>
@@ -490,10 +490,11 @@ async function loadSignals() {
 }
 
 function renderCard(s) {
-  const confColor = s.confidence === 'HIGH' ? '#00C853' :
-                    s.confidence === 'MEDIUM_HIGH' ? '#00C853' :
-                    s.confidence === 'MEDIUM' ? '#FF9500' :
-                    s.confidence === 'LOW' ? '#FF9500' : '#FF3B30';
+  // Confidence labels stored in DB: HIGH, MED-HIGH, MEDIUM, LOWER, CAUTION
+  const confColor = s.confidence === 'HIGH'     ? '#00C853' :
+                    s.confidence === 'MED-HIGH'  ? '#00C853' :
+                    s.confidence === 'MEDIUM'    ? '#FF9500' :
+                    s.confidence === 'LOWER'     ? '#FF9500' : '#FF3B30';
 
   const decayColor = s.decay_risk === 'HIGH' ? '#FF3B30' :
                      s.decay_risk === 'MEDIUM' ? '#FF9500' : '#00C853';
