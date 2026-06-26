@@ -15,6 +15,7 @@
   from = "/track.html"
   to = "/track.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/terms.html"
