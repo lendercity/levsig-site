@@ -136,17 +136,7 @@ footer a{color:#555;text-decoration:none}
   <span class="live-badge"><span class="live-dot"></span>Updated daily after market close</span>
 </div>
 
-<!-- Stats bar -->
-<div class="stats-bar">
-  <div class="stats-inner" id="stats-bar">
-    <div class="stat"><span class="stat-val white" id="stat-trades">—</span><span class="stat-label">Total Trades</span></div>
-    <div class="stat"><span class="stat-val white" id="stat-winrate">—</span><span class="stat-label">Win/Loss Ratio</span></div>
-    <div class="stat"><span class="stat-val white" id="stat-avgwin">—</span><span class="stat-label">Avg Win</span></div>
-    <div class="stat"><span class="stat-val white" id="stat-avgloss">—</span><span class="stat-label">Avg Loss</span></div>
-    <div class="stat"><span class="stat-val white" id="stat-pf">—</span><span class="stat-label">Profit Factor</span></div>
-    <div class="stat"><span class="stat-val white" id="stat-open">—</span><span class="stat-label">Open Positions</span></div>
-  </div>
-</div>
+
 
 <!-- Main content -->
 <div class="main">
@@ -273,10 +263,6 @@ footer a{color:#555;text-decoration:none}
 <script>
 const SUPABASE_URL  = 'https://wydsszcuqtwnikugeezo.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5ZHNzemN1cXR3bmlrdWdlZXpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNDQ5MDIsImV4cCI6MjA5NzcyMDkwMn0.qafYg_nLbL1H0dJDkyPWQ-9X08NlQ4K1xzgA-fN16aE';
-
-window.addEventListener('load', async () => {
-  await loadTrackRecord();
-});
 
 async function loadTrackRecord() {
   // Fetch all performance entries
