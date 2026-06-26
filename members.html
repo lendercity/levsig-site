@@ -242,6 +242,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
         <div>
           <div class="date-label">SIGNAL DATE</div>
           <div class="date-value" id="signal-date">—</div>
+          <div style="font-family:var(--mono);font-size:.6rem;color:#444;margin-top:3px" id="next-update">Updated daily after market close</div>
         </div>
         <button class="refresh-btn" onclick="loadSignals()">↻ Refresh</button>
       </div>
@@ -454,9 +455,23 @@ async function loadSignals() {
   });
   const todaySignals = Object.values(grouped);
 
-  document.getElementById('signal-date').textContent = new Date(latestDate + 'T12:00:00').toLocaleDateString('en-US', {
+  const signalDateObj = new Date(latestDate + 'T12:00:00');
+  document.getElementById('signal-date').textContent = signalDateObj.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
+
+  // Show next update context
+  const today = new Date();
+  const isToday = signalDateObj.toDateString() === today.toDateString();
+  const etHour = (today.getUTCHours() - 4 + 24) % 24; // ET approximate
+  const nextUpdateEl = document.getElementById('next-update');
+  if (isToday) {
+    nextUpdateEl.textContent = 'Updated today after market close';
+  } else if (etHour < 16) {
+    nextUpdateEl.textContent = 'Next update today after 4:30pm ET';
+  } else {
+    nextUpdateEl.textContent = 'Next update tomorrow after 4:30pm ET';
+  }
 
   // Summary pills
   const counts = { ENTRY: 0, HOLD: 0, RSI_EXIT: 0, WAIT: 0 };
