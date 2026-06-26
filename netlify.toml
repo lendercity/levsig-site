@@ -4,9 +4,29 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:;"
+    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; connect-src 'self' https:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https:;"
+
+[[redirects]]
+  from = "/members.html"
+  to = "/members.html"
+  status = 200
+
+[[redirects]]
+  from = "/track.html"
+  to = "/track.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms.html"
+  status = 200
 
 [[redirects]]
   from = "/.netlify/functions/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
