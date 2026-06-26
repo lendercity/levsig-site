@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LevSig — Performance</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@supabase/supabase-js@2.39.0/dist/umd/supabase.js"></script>
+<!-- Using direct fetch instead of Supabase JS to avoid CSP issues -->
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -274,20 +274,21 @@ footer a{color:#555;text-decoration:none}
 const SUPABASE_URL  = 'https://wydsszcuqtwnikugeezo.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5ZHNzemN1cXR3bmlrdWdlZXpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNDQ5MDIsImV4cCI6MjA5NzcyMDkwMn0.qafYg_nLbL1H0dJDkyPWQ-9X08NlQ4K1xzgA-fN16aE';
 
-let supabase;
-
 window.addEventListener('load', async () => {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   await loadTrackRecord();
 });
 
 async function loadTrackRecord() {
   // Fetch all performance entries
-  const { data, error } = await supabase
-    .from('track_record')
-    .select('*')
-    .order('entry_date', { ascending: false })
-    .limit(200);
+  let data, error;
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/track_record?select=*&order=entry_date.desc&limit=200',
+      { headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON } }
+    );
+    data = await res.json();
+    if (!res.ok) error = data;
+  } catch(e) { error = e; }
 
   if (error) {
     document.getElementById('history-content').innerHTML =
