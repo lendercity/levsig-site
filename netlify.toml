@@ -1,9 +1,19 @@
 [build]
   functions = "netlify/functions"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https:; connect-src 'self' https:;"
+
 [[redirects]]
   from = "/members.html"
   to = "/members.html"
+  status = 200
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [[redirects]]
