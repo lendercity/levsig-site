@@ -4,11 +4,21 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' https:; connect-src 'self' https:;"
+    Content-Security-Policy = "default-src 'self' 'unsafe-eval' 'unsafe-inline' https: data:;"
 
 [[redirects]]
   from = "/members.html"
   to = "/members.html"
+  status = 200
+
+[[redirects]]
+  from = "/track.html"
+  to = "/track.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms.html"
   status = 200
 
 [[redirects]]
