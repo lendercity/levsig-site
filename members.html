@@ -523,6 +523,10 @@ function renderCard(s) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
+  const entryLine = s.entry_price
+    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong></span>`
+    : '';
+
   const stopLine = s.stop_price
     ? `<span class="sig-meta">Stop <strong>$${s.stop_price}</strong></span>`
     : '';
@@ -556,6 +560,7 @@ function renderCard(s) {
     ${earningsWarn}
     <div class="sig-card-bottom">
       <div style="display:flex;gap:1.25rem;flex-wrap:wrap;">
+        ${entryLine}
         ${stopLine}
         ${rsiLine}
       </div>
