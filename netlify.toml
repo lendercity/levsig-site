@@ -30,6 +30,16 @@
   from = "/unsubscribe"
   to = "/unsubscribe.html"
   status = 200
+
+  [[redirects]]
+  from = "/learn"
+  to = "/learn.html"
+  status = 200
+
+[[redirects]]
+  from = "/learn/volatility-decay"
+  to = "/learn/volatility-decay.html"
+  status = 200
   
 [[redirects]]
   from = "/*"
