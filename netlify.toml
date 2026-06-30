@@ -45,6 +45,7 @@
   from = "/learn/*"
   to = "/learn/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
