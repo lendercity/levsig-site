@@ -1,1 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is Volatility Decay and Why It Destroys Leveraged ETF Positions | LevSig</title>
+<meta name="description" content="Volatility decay is the hidden math that erodes leveraged ETF returns in choppy markets. Learn how daily rebalancing works against TQQQ, SOXL, and TECL holders — and what to do about it.">
+<meta property="og:title" content="What is Volatility Decay and Why It Destroys Leveraged ETF Positions">
+<meta property="og:description" content="The hidden math behind why TQQQ and SOXL holders lose money even when the market goes up.">
 
+<!-- Schema markup for AEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "What is Volatility Decay and Why It Destroys Leveraged ETF Positions",
+  "description": "Volatility decay is the hidden math that erodes leveraged ETF returns in choppy markets. Learn how daily rebalancing works against TQQQ, SOXL, and TECL holders.",
+  "author": {"@type": "Organization", "name": "LevSig"},
+  "publisher": {"@type": "Organization", "name": "LevSig", "url": "https://levsig.com"},
+  "datePublished": "2026-06-30",
+  "mainEntityOfPage": "https://levsig.com/learn/volatility-decay.html"
+}
+</script>
+
+<!-- FAQ Schema for AEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is volatility decay in leveraged ETFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Volatility decay is the mathematical erosion of leveraged ETF value caused by daily rebalancing. In choppy or sideways markets, each day's reset compounds losses even when the underlying index is roughly flat over time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does TQQQ lose money when QQQ stays flat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "TQQQ rebalances daily to maintain 3x exposure. If QQQ goes up 1% then down 1%, it's back to flat. But TQQQ goes up 3% then down 3% — and due to the math of compounding, 1.03 × 0.97 = 0.9991, meaning TQQQ ends slightly below where it started even though QQQ is flat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you protect against volatility decay in leveraged ETFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The best protection against volatility decay is systematic entry and exit discipline: only enter leveraged ETF positions when trend and momentum are both aligned, use ATR-based trailing stops to exit when the trend breaks, and avoid holding through choppy or sideways markets."
+      }
+    }
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--red:#FF3B30;--amber:#FF9500;
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.nav-logo{text-decoration:none;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-right a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:.5rem 1rem;background:var(--black);color:var(--white);border-radius:4px;text-decoration:none}
+
+.article-hero{background:var(--black);padding:4rem 2rem 3rem;text-align:center}
+.article-tag{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.article-title{font-size:2rem;font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:1rem;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.2}
+.article-meta{font-family:var(--mono);font-size:.7rem;color:#555;margin-bottom:0}
+
+.article-body{max-width:680px;margin:0 auto;padding:3rem 2rem 5rem}
+
+h2{font-size:1.375rem;font-weight:700;letter-spacing:-.02em;margin:2.5rem 0 .75rem;color:var(--black)}
+h3{font-size:1.1rem;font-weight:600;margin:2rem 0 .5rem;color:var(--black)}
+p{font-size:1rem;line-height:1.8;color:var(--g700);margin-bottom:1.25rem}
+p:last-child{margin-bottom:0}
+strong{color:var(--black);font-weight:600}
+
+.callout{background:var(--g100);border-left:3px solid var(--green);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.callout p{color:var(--black);margin:0}
+
+.warning{background:#FFF8E7;border-left:3px solid var(--amber);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.warning p{color:#3D2800;margin:0}
+
+.example-box{background:var(--black);border-radius:8px;padding:1.5rem;margin:1.75rem 0}
+.example-box p{color:#ccc;font-family:var(--mono);font-size:.85rem;line-height:1.8;margin-bottom:.5rem}
+.example-box p:last-child{margin-bottom:0}
+.example-box .green{color:var(--green)}
+.example-box .red{color:var(--red)}
+.example-box .label{color:#555;font-size:.75rem}
+
+.faq{margin:2.5rem 0}
+.faq-item{border-bottom:1px solid var(--g200);padding:1.25rem 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;font-size:.95rem;margin-bottom:.5rem;color:var(--black)}
+.faq-a{font-size:.9rem;color:var(--g700);line-height:1.7}
+
+.cta-box{background:var(--black);border-radius:8px;padding:2rem;margin-top:3rem;text-align:center}
+.cta-box h3{color:var(--white);font-size:1.25rem;margin-bottom:.5rem;margin-top:0}
+.cta-box p{color:#666;font-size:.875rem;margin-bottom:1.5rem}
+.cta-btn{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.75rem 1.75rem;background:var(--green);color:var(--black);text-decoration:none;border-radius:4px;letter-spacing:.04em}
+
+.breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--g500);margin-bottom:2rem}
+.breadcrumb a{color:var(--g500);text-decoration:none}
+.breadcrumb a:hover{color:var(--black)}
+
+footer{background:var(--black);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:#444;line-height:1.8}
+footer a{color:#555;text-decoration:none}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .article-hero{padding:2.5rem 1rem 2rem}
+  .article-title{font-size:1.5rem}
+  .article-body{padding:2rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="155" height="44" viewBox="0 0 155 44" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <rect x="0"  y="24" width="7" height="14" rx="2" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="11" y="17" width="7" height="21" rx="2" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="22" y="8"  width="7" height="30" rx="2" fill="#00C853"/>
+      <text x="34" y="38" font-family="Space Mono,monospace" font-size="22" font-weight="700" fill="#0D0D0D" letter-spacing="-1.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <div class="nav-right">
+    <a href="/learn.html">Learn</a>
+    <a href="/track.html">Performance</a>
+    <a href="/members.html">Member Login</a>
+    <a href="/" class="nav-cta">GET FREE SIGNALS</a>
+  </div>
+</nav>
+
+<div class="article-hero">
+  <p class="article-tag">Fundamentals</p>
+  <h1 class="article-title">What is Volatility Decay and Why It Destroys Leveraged ETF Positions</h1>
+  <p class="article-meta">LevSig · June 2026 · 5 min read</p>
+</div>
+
+<div class="article-body">
+
+  <div class="breadcrumb">
+    <a href="/">levsig.com</a> → <a href="/learn.html">Learn</a> → Volatility Decay
+  </div>
+
+  <p>Most retail traders who buy TQQQ, SOXL, or TECL focus entirely on one question: <strong>which direction is the underlying going?</strong> If QQQ is trending up, buy TQQQ. Simple.</p>
+
+  <p>The problem is that being right on direction is not enough to make money in leveraged ETFs. There is a second force working against you at all times — one that most brokers never explain and most retail traders only discover after taking a painful loss.</p>
+
+  <p>That force is <strong>volatility decay</strong>. Also called beta decay or the constant leverage trap, it is the single most important concept for anyone trading leveraged ETFs.</p>
+
+  <h2>How Daily Rebalancing Works</h2>
+
+  <p>A 3x leveraged ETF like TQQQ is designed to deliver <strong>3x the daily return of its underlying index</strong> (the Nasdaq-100). Not 3x the monthly return. Not 3x the annual return. 3x the return of a single trading day.</p>
+
+  <p>To achieve this every single day, the ETF must rebalance its exposure at the close of each session. If the market went up today, the fund buys more exposure. If it went down, it sells some. This happens automatically, every day, regardless of what the market is doing.</p>
+
+  <p>In a strongly trending market this works beautifully — gains compound in your favor. But in choppy, sideways, or volatile markets, this same rebalancing mechanism works against you. This is volatility decay.</p>
+
+  <h2>The Math That Explains It</h2>
+
+  <p>Here is the simplest possible example of how volatility decay works:</p>
+
+  <div class="example-box">
+    <p class="label">DAY 1</p>
+    <p>QQQ: +10% &nbsp;&nbsp; TQQQ: <span class="green">+30%</span></p>
+    <p class="label">DAY 2</p>
+    <p>QQQ: -10% &nbsp;&nbsp; TQQQ: <span class="red">-30%</span></p>
+    <p class="label">NET RESULT</p>
+    <p>QQQ: 1.10 × 0.90 = <span class="green">0.99 (-1%)</span></p>
+    <p>TQQQ: 1.30 × 0.70 = <span class="red">0.91 (-9%)</span></p>
+  </div>
+
+  <p>QQQ lost 1% over two days. TQQQ lost 9%. The underlying barely moved — but the leveraged version took a significant hit. That is volatility decay in action.</p>
+
+  <p>The key insight: <strong>percentage losses always hurt more than equivalent percentage gains.</strong> Losing 30% requires a 43% gain just to get back to even. The daily reset of a leveraged ETF locks in this asymmetry every single trading day.</p>
+
+  <h2>When Decay Is Fast vs. Slow</h2>
+
+  <p>Not all leveraged ETFs decay at the same rate. Two variables determine how quickly decay compounds against you:</p>
+
+  <h3>1. Leverage Multiplier</h3>
+  <p>A 3x ETF decays faster than a 2x ETF under identical market conditions. More leverage amplifies both gains and the daily reset penalty. This is why SOXL (3x semiconductors) carries higher decay risk than UBRL (2x Uber) — the multiplier alone creates more exposure to the daily rebalancing math.</p>
+
+  <h3>2. Underlying Volatility</h3>
+  <p>The more volatile the underlying, the faster decay compounds. A 3x ETF on a high-volatility stock like a single semiconductor company decays much faster than a 3x ETF on a broad, relatively stable index like the S&P 500. This is why LevSig assigns each signal a <strong>Decay Risk rating</strong> — HIGH, MEDIUM, or LOW — based on leverage × underlying volatility (ATR).</p>
+
+  <div class="callout">
+    <p><strong>Rule of thumb:</strong> High leverage + high underlying volatility = decay can erase gains in days, even in a generally rising market. Always check the Decay Risk rating before sizing a position.</p>
+  </div>
+
+  <h2>The Practical Impact on Trading</h2>
+
+  <p>Volatility decay has one clear implication for how you should trade leveraged ETFs: <strong>time in a choppy market is your enemy.</strong></p>
+
+  <p>Buy-and-hold investors in QQQ or SPY benefit from time in the market. The longer they hold, the more compound interest works for them. The opposite is true for leveraged ETF holders — the longer you hold through chop, the more decay compounds against you, silently eroding your position even as the underlying goes nowhere.</p>
+
+  <div class="warning">
+    <p><strong>The #1 mistake:</strong> Treating a leveraged ETF like a regular ETF. Buying TQQQ because you're bullish on tech and holding it for months — through earnings, through sideways consolidation, through anything other than a clean uptrend — is how accounts get quietly destroyed.</p>
+  </div>
+
+  <h2>What Actually Works: Systematic Entry and Exit</h2>
+
+  <p>The solution to volatility decay is not to avoid leveraged ETFs. It is to trade them the way they are designed to be traded — systematically, with defined entries and exits.</p>
+
+  <p>Specifically:</p>
+
+  <p><strong>Only enter when trend and momentum are aligned.</strong> A leveraged ETF position should be opened when the underlying is in a confirmed uptrend (EMA alignment) AND short-term momentum is positive (MACD confirmation). Entering during chop or counter-trend moves is where most of the decay damage happens.</p>
+
+  <p><strong>Use ATR-based trailing stops.</strong> Fixed percentage stops (e.g., "I'll sell if it drops 10%") don't account for the actual volatility of the ETF. ATR trailing stops adjust to each ETF's real behavior — tighter in low-volatility conditions, wider in high-volatility conditions — and automatically trail up as price rises to lock in gains.</p>
+
+  <p><strong>Exit on momentum exhaustion, not gut feel.</strong> When RSI reaches overbought levels (above 80), momentum is typically exhausted and a pullback becomes more likely than a continuation. Taking profits at this point — before decay has a chance to compound through a correction — is one of the most valuable exits a systematic trader can make.</p>
+
+  <p><strong>Re-enter after RSI cools.</strong> If you exit on an RSI signal and the trend continues, don't wait for a new EMA crossover. Watch for RSI to cool back below 80 with the trend still intact — that is a re-entry signal, and capturing the continuation after a brief pullback is where systematic traders outperform.</p>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq">
+    <div class="faq-item">
+      <p class="faq-q">What is volatility decay in leveraged ETFs?</p>
+      <p class="faq-a">Volatility decay is the mathematical erosion of leveraged ETF value caused by daily rebalancing. In choppy or sideways markets, each day's reset compounds losses even when the underlying index is roughly flat over time.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does TQQQ lose money when QQQ stays flat?</p>
+      <p class="faq-a">TQQQ rebalances daily to maintain 3x exposure. If QQQ goes up 1% then down 1%, it's back to flat. But TQQQ goes up 3% then down 3% — and due to the math of compounding, 1.03 × 0.97 = 0.9991, meaning TQQQ ends slightly below where it started even though QQQ is flat. Repeat this over weeks of choppy trading and the losses become significant.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do you protect against volatility decay?</p>
+      <p class="faq-a">The best protection is systematic entry and exit discipline: only enter when trend and momentum are both aligned, use ATR-based trailing stops to exit when the trend breaks, and avoid holding through choppy or sideways markets.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Which leveraged ETFs have the highest decay risk?</p>
+      <p class="faq-a">Generally, 3x leveraged ETFs on highly volatile single stocks carry the highest decay risk. Examples include SOXL (3x semiconductors), MSTU (2x MicroStrategy), and single-stock 2x ETFs on volatile underlying companies. Broad index leveraged ETFs like UPRO (3x S&P 500) typically decay more slowly due to the lower volatility of the underlying.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is it ever safe to hold a leveraged ETF long-term?</p>
+      <p class="faq-a">In a sustained, low-volatility uptrend, leveraged ETFs can perform well over extended periods. But because markets rarely trend in a straight line, holding through any significant choppy period will expose your position to compounding decay. Most financial professionals recommend treating leveraged ETFs as short-term swing trading instruments rather than long-term holdings.</p>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Get daily signals that account for decay risk</h3>
+    <p>Every LevSig signal includes a Decay Risk rating — HIGH, MEDIUM, or LOW — so you know what you're holding before you enter. Free tier covers all 24 leveraged ETFs.</p>
+    <a href="/" class="cta-btn">GET FREE SIGNALS</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 LevSig LLC · <a href="/">levsig.com</a> · <a href="mailto:support@levsig.com">support@levsig.com</a> · <a href="/terms.html">Terms of Service</a><br>
+  Technical analysis only — not investment advice. Leveraged ETFs carry significant risk of loss.</p>
+</footer>
+
+</body>
+</html>
