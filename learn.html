@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevSig Learn — Leveraged ETF Trading Education</title>
+<meta name="description" content="Learn how to trade leveraged ETFs systematically. Articles on volatility decay, ATR stops, entry signals, and risk management for TQQQ, SOXL, TECL traders.">
+<meta property="og:title" content="LevSig Learn — Leveraged ETF Trading Education">
+<meta property="og:description" content="Systematic trading education for leveraged ETF traders. Volatility decay, ATR stops, signal systems, and more.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.nav-logo{text-decoration:none;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-right a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:.5rem 1rem;background:var(--black);color:var(--white);border-radius:4px;text-decoration:none}
+
+.hero{background:var(--black);padding:3.5rem 2rem 3rem;text-align:center}
+.hero-eyebrow{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.hero-title{font-size:2rem;font-weight:600;color:var(--white);letter-spacing:-.02em;margin-bottom:.75rem}
+.hero-sub{font-size:.9rem;color:#666;max-width:520px;margin:0 auto}
+
+.main{max-width:900px;margin:0 auto;padding:3rem 2rem 5rem}
+
+.section-label{font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--g500);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+.section-label::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+.articles{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem}
+
+.article-card{border:1px solid var(--g200);border-radius:8px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s;display:block}
+.article-card:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(0,200,83,.08)}
+.card-top{background:var(--black);padding:1.5rem;min-height:120px;display:flex;align-items:flex-end}
+.card-tag{font-family:var(--mono);font-size:.6rem;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase}
+.card-body{padding:1.25rem}
+.card-title{font-size:1rem;font-weight:600;line-height:1.4;margin-bottom:.5rem;letter-spacing:-.01em}
+.card-excerpt{font-size:.825rem;color:var(--g500);line-height:1.6;margin-bottom:.75rem}
+.card-meta{font-family:var(--mono);font-size:.65rem;color:var(--g500)}
+
+footer{background:var(--black);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:#444;line-height:1.8}
+footer a{color:#555;text-decoration:none}
+
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .hero{padding:2.5rem 1rem 2rem}
+  .hero-title{font-size:1.5rem}
+  .main{padding:2rem 1rem 3rem}
+  .articles{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="155" height="44" viewBox="0 0 155 44" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <rect x="0"  y="24" width="7" height="14" rx="2" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="11" y="17" width="7" height="21" rx="2" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="22" y="8"  width="7" height="30" rx="2" fill="#00C853"/>
+      <text x="34" y="38" font-family="Space Mono,monospace" font-size="22" font-weight="700" fill="#0D0D0D" letter-spacing="-1.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <div class="nav-right">
+    <a href="/">Home</a>
+    <a href="/track.html">Performance</a>
+    <a href="/members.html">Member Login</a>
+    <a href="/" class="nav-cta">GET FREE SIGNALS</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">Education</p>
+  <h1 class="hero-title">Leveraged ETF Trading</h1>
+  <p class="hero-sub">Everything we know about trading leveraged ETFs systematically. No fluff — just the mechanics that matter.</p>
+</div>
+
+<div class="main">
+  <p class="section-label">Latest guides</p>
+  <div class="articles">
+
+    <a href="/learn/volatility-decay.html" class="article-card">
+      <div class="card-top">
+        <span class="card-tag">Fundamentals</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">What is Volatility Decay and Why It Destroys Leveraged ETF Positions</h2>
+        <p class="card-excerpt">The hidden math behind why TQQQ and SOXL holders lose money even when the market goes up. Most retail traders never learn this until it's too late.</p>
+        <span class="card-meta">June 2026 · 5 min read</span>
+      </div>
+    </a>
+
+    <a href="/learn/atr-stop.html" class="article-card">
+      <div class="card-top">
+        <span class="card-tag">Risk Management</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">ATR Trailing Stops: The Only Stop Loss Method That Works for Leveraged ETFs</h2>
+        <p class="card-excerpt">Fixed percentage stops get blown out by normal volatility. ATR stops adapt to each ETF's actual behavior — here's how to calculate and use them.</p>
+        <span class="card-meta">Coming soon</span>
+      </div>
+    </a>
+
+    <a href="/learn/entry-signals.html" class="article-card">
+      <div class="card-top">
+        <span class="card-tag">Signal Logic</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">How to Know When to Enter a Leveraged ETF Trade</h2>
+        <p class="card-excerpt">EMA crossovers, MACD confirmation, RSI filters — what each indicator does and why combining them reduces false signals dramatically.</p>
+        <span class="card-meta">Coming soon</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 LevSig LLC · <a href="/">levsig.com</a> · <a href="mailto:support@levsig.com">support@levsig.com</a> · <a href="/terms.html">Terms of Service</a><br>
+  Technical analysis only — not investment advice. Leveraged ETFs carry significant risk of loss.</p>
+</footer>
+
+</body>
+</html>
