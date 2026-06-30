@@ -22,11 +22,6 @@
   status = 200
 
 [[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-[[redirects]]
   from = "/unsubscribe"
   to = "/unsubscribe.html"
   status = 200
