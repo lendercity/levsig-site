@@ -45,6 +45,16 @@
   from = "/learn/atr-stops"
   to = "/learn/atr-stops.html"
   status = 200
+
+  [[redirects]]
+  from = "/learn/volatility-decay.html"
+  to = "/learn/volatility-decay.html"
+  status = 200
+
+[[redirects]]
+  from = "/learn/atr-stops.html"
+  to = "/learn/atr-stops.html"
+  status = 200
   
 [[redirects]]
   from = "/*"
