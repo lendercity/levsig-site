@@ -22,35 +22,30 @@
   status = 200
 
 [[redirects]]
+  from = "/unsubscribe.html"
+  to = "/unsubscribe.html"
+  status = 200
+
+[[redirects]]
   from = "/unsubscribe"
   to = "/unsubscribe.html"
   status = 200
 
-  [[redirects]]
+[[redirects]]
+  from = "/learn.html"
+  to = "/learn.html"
+  status = 200
+
+[[redirects]]
   from = "/learn"
   to = "/learn.html"
   status = 200
 
 [[redirects]]
-  from = "/learn/volatility-decay"
-  to = "/learn/volatility-decay.html"
+  from = "/learn/*"
+  to = "/learn/:splat"
   status = 200
 
-  [[redirects]]
-  from = "/learn/atr-stops"
-  to = "/learn/atr-stops.html"
-  status = 200
-
-  [[redirects]]
-  from = "/learn/volatility-decay.html"
-  to = "/learn/volatility-decay.html"
-  status = 200
-
-[[redirects]]
-  from = "/learn/atr-stops.html"
-  to = "/learn/atr-stops.html"
-  status = 200
-  
 [[redirects]]
   from = "/*"
   to = "/index.html"
