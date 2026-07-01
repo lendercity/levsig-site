@@ -623,6 +623,19 @@ async function loadTrackRecord() {
         <div class="stat-box-val">${stats.avg_holding_days || 0}d</div>
       </div>
     `;
+
+    // Calculate total P&L from closed trades
+    if (data) {
+      const closed = data.filter(t => t.status === 'CLOSED' && t.pnl_pct !== null);
+      const totalPnl = closed.reduce((s, t) => s + parseFloat(t.pnl_pct), 0);
+      const color = totalPnl >= 0 ? '#00C853' : '#FF3B30';
+      const prefix = totalPnl >= 0 ? '+' : '';
+      document.getElementById('track-stats').innerHTML += `
+      <div class="stat-box">
+        <div class="stat-box-label">TOTAL P&L</div>
+        <div class="stat-box-val" style="color:${color}">${prefix}${totalPnl.toFixed(2)}%</div>
+      </div>`;
+    }
   }
 
   if (error || !data || data.length === 0) {
