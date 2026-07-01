@@ -168,7 +168,7 @@ footer a{color:#555;text-decoration:none}
     <p class="label">FIXED PERCENTAGE STOP — THE PROBLEM</p>
     <p>SOXL entry price: $240.00</p>
     <p>5% stop level: <span class="red">$228.00</span></p>
-    <p>SOXL 14-day ATR: $18.50</p>
+    <p>SOXL ATR: $18.50</p>
     <p>Single day normal move: ±$18.50 (±7.7%)</p>
     <p class="red">→ A completely normal down day stops you out</p>
   </div>
@@ -182,18 +182,18 @@ footer a{color:#555;text-decoration:none}
   <p>An ATR trailing stop sets your stop loss level at a <strong>multiple of ATR below the current price</strong>. As the price rises, the stop level rises with it. As the stop rises, it never comes back down — it only moves up, locking in gains as the trade progresses.</p>
 
   <div class="callout">
-    <p><strong>ATR Stop Formula:</strong> Stop Level = Current Price − (ATR Multiplier × 14-day ATR)</p>
+    <p><strong>ATR Stop Formula:</strong> Stop Level = Current Price − (ATR Multiplier × Average True Range)</p>
   </div>
 
   <div class="example-box">
     <p class="label">ATR STOP CALCULATION — SOXL EXAMPLE</p>
     <p>Entry price: $240.00</p>
-    <p>14-day ATR: $18.50</p>
-    <p>ATR multiplier: 1.5×</p>
-    <p>Initial stop: $240.00 − (1.5 × $18.50) = <span class="green">$212.25</span></p>
+    <p>ATR: $18.50</p>
+    <p>ATR multiplier: [proprietary]</p>
+    <p>Initial stop: $240.00 − (multiplier × $18.50) = <span class="green">$212.25</span></p>
     <p class="label" style="margin-top:12px">THREE DAYS LATER — PRICE RISES TO $265</p>
     <p>New ATR: $19.20</p>
-    <p>Updated stop: $265.00 − (1.5 × $19.20) = <span class="green">$236.20</span></p>
+    <p>Updated stop: $265.00 − (multiplier × $19.20) = <span class="green">$236.20</span></p>
     <p class="green">→ Stop trailed up $23.95 — locking in gains</p>
   </div>
 
@@ -203,11 +203,11 @@ footer a{color:#555;text-decoration:none}
 
   <p>The ATR multiplier determines how much room you give the trade to breathe. A higher multiplier means a wider stop — fewer false exits but larger potential losses if the trend breaks. A lower multiplier means a tighter stop — quicker exits but more false signals.</p>
 
-  <p>LevSig uses a <strong>1.5× ATR multiplier</strong> across all signals, based on backtesting across 24 leveraged ETF underlyings over four years. This multiplier was selected because it:</p>
+  <p>LevSig uses a proprietary ATR multiplier across all signals, selected based on extensive backtesting across 24 leveraged ETF underlyings over four years. This multiplier was selected because it:</p>
 
   <p>→ Gives positions enough room to handle normal daily volatility without premature exits</p>
   <p>→ Responds quickly enough to genuine trend breaks to limit losses</p>
-  <p>→ Produces a win/loss ratio of 2.69× across the backtested universe — average wins are nearly 3x larger than average losses</p>
+  <p>→ Produces a strong win/loss ratio across the backtested universe — average wins are significantly larger than average losses</p>
 
   <div class="warning">
     <p><strong>Note:</strong> The right multiplier depends on your risk tolerance and holding period. Day traders often use 1.0-1.5×. Swing traders typically use 1.5-2.5×. Position traders may use 3.0× or higher. The key is consistency — pick a multiplier and stick with it across your system.</p>
@@ -244,7 +244,7 @@ footer a{color:#555;text-decoration:none}
     </div>
     <div class="faq-item">
       <p class="faq-q">What ATR multiplier should I use for leveraged ETFs?</p>
-      <p class="faq-a">A 1.5× ATR multiplier works well for most leveraged ETFs as a starting point for swing trading. This gives the position enough room to handle normal daily volatility without getting stopped out prematurely, while still responding to genuine trend breaks.</p>
+      <p class="faq-a">The right multiplier depends on your risk tolerance and holding period. Swing traders typically use multipliers in the 1.5-2.5× range. LevSig uses a proprietary multiplier selected through backtesting to balance noise filtering with responsiveness to genuine trend breaks.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Why don't fixed percentage stops work for leveraged ETFs?</p>
@@ -252,7 +252,7 @@ footer a{color:#555;text-decoration:none}
     </div>
     <div class="faq-item">
       <p class="faq-q">How do I calculate ATR?</p>
-      <p class="faq-a">Most trading platforms and charting tools calculate ATR automatically. Add the ATR indicator to any chart and set the period to 14 days. The current ATR value is displayed — multiply it by your chosen multiplier (e.g., 1.5) and subtract from the current price to get your stop level.</p>
+      <p class="faq-a">Most trading platforms and charting tools calculate ATR automatically. Add the ATR indicator to any chart and set the period to your preferred lookback (commonly 10-20 days). The current ATR value is displayed — multiply it by your chosen multiplier and subtract from the current price to get your stop level.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">Should I use closing price or intraday price to trigger the stop?</p>
