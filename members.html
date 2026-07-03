@@ -524,8 +524,11 @@ function renderCard(s) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
+  const entryDateStr = s.entry_date 
+    ? ` <span style="color:#555;font-size:.65rem;">· ${s.entry_date}</span>` 
+    : '';
   const entryLine = s.entry_price && (s.status === 'ENTRY' || s.status === 'HOLD')
-    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong></span>`
+    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong>${entryDateStr}</span>`
     : '';
 
   const stopLine = s.stop_price
