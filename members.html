@@ -443,7 +443,7 @@ async function loadOpenPositions() {
 }
 
 async function loadSignals() {
-  await loadOpenPositions();
+  loadOpenPositions().catch(e => console.warn('Open positions load failed:', e));
   document.getElementById('signals-content').innerHTML = '<div class="loading">Loading signals</div>';
   document.getElementById('summary-pills').innerHTML = '';
 
