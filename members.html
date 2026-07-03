@@ -430,7 +430,7 @@ let openPositions = {};
 async function loadOpenPositions() {
   try {
     const res = await fetch(
-      SUPABASE_URL + '/rest/v1/track_record?select=etf_ticker,entry_date,entry_price,stop_price&status=eq.OPEN',
+      SUPABASE_URL + '/rest/v1/track_record?status=eq.OPEN&select=etf_ticker,entry_date,entry_price,stop_price',
       { headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON } }
     );
     const data = await res.json();
