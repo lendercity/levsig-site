@@ -424,26 +424,7 @@ document.getElementById('login-email').addEventListener('keydown', e => {
 });
 
 // ── Load signals ──────────────────────────────────────────────────────────────
-// Store track record open positions for entry price lookup
-let openPositions = {};
-
-async function loadOpenPositions() {
-  try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/track_record?status=eq.OPEN&select=etf_ticker,entry_date,entry_price,stop_price',
-      { headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON } }
-    );
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      data.forEach(p => { openPositions[p.etf_ticker] = p; });
-    }
-  } catch(e) {
-    console.warn('Could not load open positions:', e.message);
-  }
-}
-
 async function loadSignals() {
-  loadOpenPositions().catch(e => console.warn('Open positions load failed:', e));
   document.getElementById('signals-content').innerHTML = '<div class="loading">Loading signals</div>';
   document.getElementById('summary-pills').innerHTML = '';
 
@@ -543,17 +524,8 @@ function renderCard(s) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
-  // For ACTIVE POSITION use track_record entry price, for ENTRY use today's signal price
-  const trackPos = openPositions[primaryTicker] || openPositions[s.underlying];
-  const displayEntry = s.status === 'HOLD' && trackPos 
-    ? trackPos.entry_price 
-    : s.entry_price;
-  const displayEntryDate = s.status === 'HOLD' && trackPos 
-    ? trackPos.entry_date 
-    : null;
-
-  const entryLine = displayEntry && (s.status === 'ENTRY' || s.status === 'HOLD')
-    ? `<span class="sig-meta">Entry <strong>$${displayEntry}</strong>${displayEntryDate ? ` <span style="color:#555;font-size:.65rem;">· ${displayEntryDate}</span>` : ''}</span>`
+  const entryLine = s.entry_price && (s.status === 'ENTRY' || s.status === 'HOLD')
+    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong></span>`
     : '';
 
   const stopLine = s.stop_price
@@ -570,7 +542,6 @@ function renderCard(s) {
     : (s.etf_ticker ? [s.etf_ticker] : [s.underlying]);
 
   const primaryDisplay = etfTickers.join(' · ');
-  const primaryTicker = etfTickers[0];
   const etfTagsHtml = etfTickers.map(t =>
     `<span class="etf-tag">${t}</span>`
   ).join('');
