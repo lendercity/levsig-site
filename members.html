@@ -275,8 +275,8 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
         </div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;">
-        <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">CONFIDENCE</p>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">Signal reliability based on underlying type, liquidity, and earnings risk.</p>
+        <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">UNDERLYING RATING</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">Rates the underlying ETF source by liquidity and index type. Not a prediction of trade outcome.</p>
         <div style="display:flex;flex-direction:column;gap:.4rem;">
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">HIGH</strong> — Index-based (TQQQ, TECL, SOXL, UPRO)</span>
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">MED-HIGH</strong> — Large cap single stock (NVDA, AAPL, MSFT)</span>
@@ -424,7 +424,26 @@ document.getElementById('login-email').addEventListener('keydown', e => {
 });
 
 // ── Load signals ──────────────────────────────────────────────────────────────
+// Store track record open positions for entry price lookup
+let openPositions = {};
+
+async function loadOpenPositions() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/track_record?select=etf_ticker,entry_date,entry_price,stop_price&status=eq.OPEN',
+      { headers: { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON } }
+    );
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      data.forEach(p => { openPositions[p.etf_ticker] = p; });
+    }
+  } catch(e) {
+    console.warn('Could not load open positions:', e.message);
+  }
+}
+
 async function loadSignals() {
+  await loadOpenPositions();
   document.getElementById('signals-content').innerHTML = '<div class="loading">Loading signals</div>';
   document.getElementById('summary-pills').innerHTML = '';
 
@@ -511,7 +530,7 @@ async function loadSignals() {
 }
 
 function renderCard(s) {
-  // Confidence labels stored in DB: HIGH, MED-HIGH, MEDIUM, LOWER, CAUTION
+  // Underlying Rating labels stored in DB: HIGH, MED-HIGH, MEDIUM, LOWER, CAUTION
   const confColor = s.confidence === 'HIGH'     ? '#00C853' :
                     s.confidence === 'MED-HIGH'  ? '#00C853' :
                     s.confidence === 'MEDIUM'    ? '#FF9500' :
@@ -524,8 +543,17 @@ function renderCard(s) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
-  const entryLine = s.entry_price && (s.status === 'ENTRY' || s.status === 'HOLD')
-    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong></span>`
+  // For ACTIVE POSITION use track_record entry price, for ENTRY use today's signal price
+  const trackPos = openPositions[primaryTicker] || openPositions[s.underlying];
+  const displayEntry = s.status === 'HOLD' && trackPos 
+    ? trackPos.entry_price 
+    : s.entry_price;
+  const displayEntryDate = s.status === 'HOLD' && trackPos 
+    ? trackPos.entry_date 
+    : null;
+
+  const entryLine = displayEntry && (s.status === 'ENTRY' || s.status === 'HOLD')
+    ? `<span class="sig-meta">Entry <strong>$${displayEntry}</strong>${displayEntryDate ? ` <span style="color:#555;font-size:.65rem;">· ${displayEntryDate}</span>` : ''}</span>`
     : '';
 
   const stopLine = s.stop_price
@@ -542,6 +570,7 @@ function renderCard(s) {
     : (s.etf_ticker ? [s.etf_ticker] : [s.underlying]);
 
   const primaryDisplay = etfTickers.join(' · ');
+  const primaryTicker = etfTickers[0];
   const etfTagsHtml = etfTickers.map(t =>
     `<span class="etf-tag">${t}</span>`
   ).join('');
@@ -567,7 +596,7 @@ function renderCard(s) {
       </div>
       <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
         <span class="sig-meta">Decay Risk: <strong style="color:${decayColor}">${s.decay_risk || '—'}</strong></span>
-        <span class="sig-meta">Confidence: <strong style="color:${confColor}">${s.confidence || '—'}</strong></span>
+        <span class="sig-meta">Underlying Rating: <strong style="color:${confColor}">${s.confidence || '—'}</strong></span>
       </div>
     </div>
     <div class="sig-card-etfs">
