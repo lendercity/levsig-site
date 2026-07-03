@@ -46,5 +46,9 @@
   to = "/learn/:splat"
   status = 200
   force = true
-
+  
+[[redirects]]
+  from = "/learn-entry-signals.html"
+  to = "/learn-entry-signals.html"
+  status = 200
 
