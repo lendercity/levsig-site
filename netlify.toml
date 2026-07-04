@@ -51,4 +51,9 @@
   from = "/learn-entry-signals.html"
   to = "/learn-entry-signals.html"
   status = 200
+  
+  [[redirects]]
+  from = "/learn-tqqq-vs-tecl.html"
+  to = "/learn-tqqq-vs-tecl.html"
+  status = 200
 
