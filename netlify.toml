@@ -57,3 +57,13 @@
   to = "/learn-tqqq-vs-tecl.html"
   status = 200
 
+  [[redirects]]
+  from = "/learn-soxl-vs-tqqq.html"
+  to = "/learn-soxl-vs-tqqq.html"
+  status = 200
+
+[[redirects]]
+  from = "/learn-mstu-vs-conl.html"
+  to = "/learn-mstu-vs-conl.html"
+  status = 200
+
