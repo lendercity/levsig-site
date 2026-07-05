@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOXL vs TQQQ — Which Leveraged ETF Should You Trade? | LevSig</title>
+<meta name="description" content="SOXL vs TQQQ compared: semiconductors vs Nasdaq-100, volatility decay, AUM, trend behavior, and which one produces cleaner signals for systematic traders.">
+<link rel="canonical" href="https://levsig.com/learn-soxl-vs-tqqq.html">
+<meta property="og:title" content="SOXL vs TQQQ — Which Leveraged ETF Should You Trade? | LevSig">
+<meta property="og:description" content="SOXL and TQQQ are both 3x leveraged — but semiconductors and the Nasdaq-100 are very different beasts. Here's what matters for systematic traders.">
+<meta property="og:url" content="https://levsig.com/learn-soxl-vs-tqqq.html">
+<meta property="og:type" content="article">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SOXL vs TQQQ — Which Leveraged ETF Should You Trade?",
+  "author": {"@type": "Organization", "name": "LevSig LLC"},
+  "publisher": {"@type": "Organization", "name": "LevSig LLC", "url": "https://levsig.com"},
+  "description": "SOXL vs TQQQ compared for systematic leveraged ETF traders. Volatility, decay, trend behavior, and signal quality.",
+  "datePublished": "2026-07-05",
+  "mainEntityOfPage": "https://levsig.com/learn-soxl-vs-tqqq.html"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is SOXL or TQQQ more volatile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SOXL is significantly more volatile than TQQQ. Semiconductors are a concentrated, cyclical sector that moves faster and harder than the broad Nasdaq-100. SOXL routinely moves 5-10% in a single session during high-volatility periods, compared to TQQQ's typical 3-6% daily range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is better for swing trading, SOXL or TQQQ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both are viable for systematic swing trading, but they suit different risk profiles. TQQQ offers deeper liquidity, broader diversification, and lower volatility decay in choppy markets. SOXL offers bigger moves when semiconductors are trending but requires tighter position sizing due to its higher volatility."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does SOXL drop more than TQQQ when the market falls?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SOXL tracks the semiconductor sector, which is one of the most cyclical and volatile segments of the market. Semiconductors are highly sensitive to earnings, supply chain news, geopolitical events, and AI demand cycles. When risk-off sentiment hits, concentrated sector ETFs like SOXL fall harder and faster than broad index ETFs like TQQQ."
+      }
+    }
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--red:#FF3B30;--amber:#FF9500;
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.nav-logo{text-decoration:none;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-right a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:.5rem 1rem;background:var(--black);color:var(--white);border-radius:4px;text-decoration:none}
+.article-hero{background:var(--black);padding:4rem 2rem 3rem;text-align:center}
+.article-tag{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.article-title{font-size:2rem;font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:1rem;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.2}
+.article-meta{font-family:var(--mono);font-size:.7rem;color:#555}
+.article-body{max-width:680px;margin:0 auto;padding:3rem 2rem 5rem}
+h2{font-size:1.375rem;font-weight:700;letter-spacing:-.02em;margin:2.5rem 0 .75rem;color:var(--black)}
+h3{font-size:1.1rem;font-weight:600;margin:2rem 0 .5rem;color:var(--black)}
+p{font-size:1rem;line-height:1.8;color:var(--g700);margin-bottom:1.25rem}
+p:last-child{margin-bottom:0}
+strong{color:var(--black);font-weight:600}
+.callout{background:var(--g100);border-left:3px solid var(--green);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.callout p{color:var(--black);margin:0}
+.warning{background:#FFF8E7;border-left:3px solid var(--amber);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.warning p{color:#3D2800;margin:0}
+.signal-pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.75rem 0}
+.mini-card{background:var(--black);border-radius:8px;padding:1.25rem;text-align:center}
+.mini-card .ticker{font-family:var(--mono);font-size:1.25rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.mini-card .sig{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:3px;display:inline-block;letter-spacing:.04em}
+.sig.long{background:rgba(0,200,83,.15);color:var(--green)}
+.sig.flat{background:rgba(255,255,255,.08);color:#888}
+.sig.loading{color:#444}
+table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.875rem}
+thead th{font-family:var(--mono);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--g500);text-align:left;padding:.6rem .75rem;border-bottom:2px solid var(--g200)}
+tbody td{padding:.7rem .75rem;border-bottom:1px solid var(--g100);color:var(--g700)}
+tbody td:first-child{font-weight:600;color:var(--black)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--g100)}
+.highlight{color:var(--green);font-weight:600}
+.faq{margin:2.5rem 0}
+.faq-item{border-bottom:1px solid var(--g200);padding:1.25rem 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;font-size:.95rem;margin-bottom:.5rem;color:var(--black)}
+.faq-a{font-size:.9rem;color:var(--g700);line-height:1.7}
+.cta-box{background:var(--black);border-radius:8px;padding:2rem;margin-top:3rem;text-align:center}
+.cta-box h3{color:var(--white);font-size:1.25rem;margin-bottom:.5rem;margin-top:0}
+.cta-box p{color:#666;font-size:.875rem;margin-bottom:1.5rem}
+.cta-btn{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.75rem 1.75rem;background:var(--green);color:var(--black);text-decoration:none;border-radius:4px;letter-spacing:.04em}
+.nav-links{display:flex;gap:.75rem;flex-wrap:wrap;margin:2.5rem 0}
+.nav-link{border:1px solid var(--g200);border-radius:20px;padding:.4rem 1rem;font-family:var(--mono);font-size:.7rem;color:var(--black);text-decoration:none;transition:border-color .15s}
+.nav-link:hover{border-color:var(--green)}
+.breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--g500);margin-bottom:2rem}
+.breadcrumb a{color:var(--g500);text-decoration:none}
+.breadcrumb a:hover{color:var(--black)}
+footer{background:var(--black);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:#444;line-height:1.8}
+footer a{color:#555;text-decoration:none}
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .article-hero{padding:2.5rem 1rem 2rem}
+  .article-title{font-size:1.5rem}
+  .article-body{padding:2rem 1rem 3rem}
+  .signal-pair{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="155" height="44" viewBox="0 0 155 44" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <rect x="0"  y="24" width="7" height="14" rx="2" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="11" y="17" width="7" height="21" rx="2" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="22" y="8"  width="7" height="30" rx="2" fill="#00C853"/>
+      <text x="34" y="38" font-family="Space Mono,monospace" font-size="22" font-weight="700" fill="#0D0D0D" letter-spacing="-1.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <div class="nav-right">
+    <a href="/learn.html">Learn</a>
+    <a href="/track.html">Performance</a>
+    <a href="/members.html">Member Login</a>
+    <a href="/" class="nav-cta">GET FREE SIGNALS</a>
+  </div>
+</nav>
+
+<div class="article-hero">
+  <p class="article-tag">Comparison · 3x Leveraged ETFs</p>
+  <h1 class="article-title">SOXL vs TQQQ — Which Leveraged ETF Should You Trade?</h1>
+  <p class="article-meta">LevSig · July 2026 · 5 min read</p>
+</div>
+
+<div class="article-body">
+
+  <div class="breadcrumb">
+    <a href="/">levsig.com</a> → <a href="/learn.html">Learn</a> → SOXL vs TQQQ
+  </div>
+
+  <p>SOXL and TQQQ are both 3x leveraged ETFs. Both are widely traded. Both are in the LevSig signal universe. But they are fundamentally different instruments — one tracks the Nasdaq-100, the other tracks semiconductors alone. Understanding that difference is essential before trading either systematically.</p>
+
+  <div class="signal-pair">
+    <div class="mini-card">
+      <div class="ticker">SOXL</div>
+      <div class="sig loading" id="sig-SOXL">loading...</div>
+    </div>
+    <div class="mini-card">
+      <div class="ticker">TQQQ</div>
+      <div class="sig loading" id="sig-TQQQ">loading...</div>
+    </div>
+  </div>
+
+  <h2>The Basics</h2>
+  <p>SOXL tracks the Philadelphia Semiconductor Index (SOXX) — 30 semiconductor companies including NVIDIA, AMD, Broadcom, TSMC, and Intel. TQQQ tracks the Nasdaq-100 — 100 of the largest non-financial companies on the Nasdaq, heavily weighted toward tech but including Amazon, Meta, Costco, and others.</p>
+
+  <table>
+    <thead><tr><th></th><th>SOXL</th><th>TQQQ</th></tr></thead>
+    <tbody>
+      <tr><td>Full name</td><td>Direxion Daily Semiconductor Bull 3X</td><td>ProShares UltraPro QQQ</td></tr>
+      <tr><td>Leverage</td><td>3x daily</td><td>3x daily</td></tr>
+      <tr><td>Underlying</td><td>SOXX (Semis)</td><td>QQQ (Nasdaq-100)</td></tr>
+      <tr><td>Holdings</td><td>~30 stocks</td><td>~100 stocks</td></tr>
+      <tr><td>AUM</td><td>~$27B</td><td class="highlight">~$22B</td></tr>
+      <tr><td>Issuer</td><td>Direxion</td><td>ProShares</td></tr>
+      <tr><td>Sector</td><td>Semiconductors only</td><td>Broad tech + more</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Volatility: The Biggest Difference</h2>
+  <p>This is where SOXL and TQQQ diverge most dramatically. Semiconductors are one of the most volatile sectors in the market — highly sensitive to earnings, supply chain disruptions, AI demand cycles, geopolitical risk (Taiwan, China export controls), and macro interest rate moves.</p>
+
+  <p>SOXL routinely moves <strong>5-10% in a single session</strong> during high-volatility periods. TQQQ's typical daily range is 3-6%. At 3x leverage, SOXL can move 15-30% in a week during a strong trend or a sharp correction — a magnitude that few retail traders are psychologically prepared for.</p>
+
+  <div class="warning">
+    <p><strong>Position sizing matters more with SOXL.</strong> The higher volatility means ATR-based stops are wider in dollar terms, and a single bad entry can result in a larger percentage loss before the stop triggers. Never size a SOXL position the same way you'd size a TQQQ position.</p>
+  </div>
+
+  <h2>Volatility Decay</h2>
+  <p>Both ETFs reset to 3x daily and suffer from volatility decay in choppy markets. But SOXL's higher underlying volatility means it decays faster during sideways periods.</p>
+
+  <p>In a week where SOXX moves up 2%, down 2%, up 2%, down 2% — essentially flat — SOXL loses more value than TQQQ would under equivalent QQQ chop. The compounding math penalizes higher volatility more severely. This is why SOXL requires even more discipline around entry timing than TQQQ — entering during chop is costly in either ETF, but especially in SOXL.</p>
+
+  <div class="callout">
+    <p><strong>The decay rule of thumb:</strong> Higher underlying volatility = faster decay in sideways markets. SOXL's decay risk is rated HIGH in the LevSig signal system for exactly this reason. Size positions accordingly and exit quickly when trend conditions break down.</p>
+  </div>
+
+  <h2>Trend Behavior</h2>
+  <p>When semiconductors trend, they trend hard. SOXL in a confirmed semi bull cycle can produce extraordinary returns — +100-200% moves over 3-6 months are not uncommon. The AI infrastructure buildout in 2023-2024 is a prime example: SOXX more than doubled, and SOXL produced multiples of that return for traders who caught and held the trend systematically.</p>
+
+  <p>TQQQ trends more steadily. The Nasdaq-100's breadth means it doesn't spike as hard in pure semiconductor cycles, but it also doesn't fall as hard when semis correct. TQQQ's trends tend to be longer, smoother, and more forgiving of imperfect entries.</p>
+
+  <p>For systematic traders, the choice comes down to risk tolerance:</p>
+  <p>→ <strong>SOXL</strong> — higher volatility, faster decay, bigger swings in both directions, higher potential return in semi bull cycles</p>
+  <p>→ <strong>TQQQ</strong> — lower volatility, slower decay, steadier trends, more forgiving of timing errors</p>
+
+  <h2>Liquidity and Spreads</h2>
+  <p>Both are among the most liquid leveraged ETFs available. SOXL actually has slightly higher AUM than TQQQ (~$27B vs ~$22B), which reflects its popularity among semiconductor traders. Spreads on both are typically 1-2 cents — acceptable for swing trading, though TQQQ has a slight edge in execution quality for very large position sizes.</p>
+
+  <h2>Which One for Signal Trading?</h2>
+  <p>Both are in the LevSig signal universe for good reason — they respond well to trend-following systems applied to their underlying indexes. The key differences in practice:</p>
+
+  <p><strong>SOXL signals fire less frequently</strong> because semiconductors need stronger confirmation before a trend is established — the higher volatility means more noise to filter. When SOXL does fire an entry signal, the conviction is higher.</p>
+
+  <p><strong>TQQQ signals are more consistent</strong> — the broader Nasdaq-100 tends to trend more cleanly and produces more signal opportunities across different market environments.</p>
+
+  <div class="callout">
+    <p><strong>Our take:</strong> Trading both gives you the best of both worlds. TQQQ provides consistent signal opportunities in broad tech trends. SOXL adds concentrated semiconductor exposure when the AI and chip cycle is running. When both signal simultaneously it's a strong confirmation that tech as a whole is in a confirmed uptrend.</p>
+  </div>
+
+  <h2>Quick Comparison</h2>
+  <table>
+    <thead><tr><th></th><th>SOXL</th><th>TQQQ</th></tr></thead>
+    <tbody>
+      <tr><td>Best for</td><td>Semi bull cycles, concentrated exposure</td><td>Broad tech trends, steadier gains</td></tr>
+      <tr><td>Daily volatility</td><td class="highlight" style="color:var(--amber)">Higher (5-10%)</td><td>Lower (3-6%)</td></tr>
+      <tr><td>Decay in chop</td><td style="color:var(--amber)">Faster</td><td class="highlight">Slower</td></tr>
+      <tr><td>Trend magnitude</td><td class="highlight">Larger when trending</td><td>Steady</td></tr>
+      <tr><td>Signal frequency</td><td>Less frequent</td><td class="highlight">More consistent</td></tr>
+      <tr><td>Position sizing</td><td style="color:var(--amber)">Smaller (more risk)</td><td class="highlight">More flexible</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Bottom Line</h2>
+  <p>SOXL and TQQQ serve different purposes in a systematic leveraged ETF portfolio. SOXL is a high-octane semiconductor play that rewards disciplined trend followers with outsized returns when semis run — and punishes holders who stay too long when the trend breaks. TQQQ is the broader, steadier tech exposure that suits most systematic traders as a core position.</p>
+
+  <p>Neither should be held without a systematic exit rule. Both need ATR-based trailing stops. And both deserve respect for how quickly they can move against you when conditions change.</p>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq">
+    <div class="faq-item">
+      <p class="faq-q">Is SOXL or TQQQ more volatile?</p>
+      <p class="faq-a">SOXL is significantly more volatile. Semiconductors are a concentrated, cyclical sector that moves faster and harder than the broad Nasdaq-100. SOXL routinely moves 5-10% in a single session during high-volatility periods, compared to TQQQ's typical 3-6% daily range.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Which is better for swing trading, SOXL or TQQQ?</p>
+      <p class="faq-a">Both are viable for systematic swing trading but suit different risk profiles. TQQQ offers broader diversification and lower decay in choppy markets. SOXL offers bigger moves when semiconductors are trending but requires tighter position sizing due to its higher volatility.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why does SOXL drop more than TQQQ when the market falls?</p>
+      <p class="faq-a">SOXL tracks semiconductors — one of the most cyclical and volatile market segments. Semis are highly sensitive to earnings, supply chain news, geopolitical events, and AI demand cycles. When risk-off sentiment hits, concentrated sector ETFs like SOXL fall harder and faster than broad index ETFs like TQQQ.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Can I hold both SOXL and TQQQ at the same time?</p>
+      <p class="faq-a">Yes — many systematic traders hold both when both underlying indexes are in confirmed uptrends. When SOXL and TQQQ signal simultaneously, it's a strong confirmation of broad tech momentum. Be aware that both are correlated — in a broad tech selloff, both will decline simultaneously.</p>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Get daily signals for both</h3>
+    <p>SOXL, TQQQ, and 22 other leveraged ETFs — updated every trading day after market close.</p>
+    <a class="cta-btn" href="/">GET FREE SIGNALS</a>
+  </div>
+
+  <div class="nav-links">
+    <a class="nav-link" href="/learn.html">← Back to Learn</a>
+    <a class="nav-link" href="/learn-tqqq-vs-tecl.html">TQQQ vs TECL →</a>
+    <a class="nav-link" href="/learn-volatility-decay.html">Volatility Decay →</a>
+    <a class="nav-link" href="/learn-atr-stops.html">ATR Stops →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 LevSig LLC · <a href="/">levsig.com</a> · <a href="mailto:support@levsig.com">support@levsig.com</a> · <a href="/terms.html">Terms of Service</a><br>
+  Technical analysis only — not investment advice. Leveraged ETFs carry significant risk of loss.</p>
+</footer>
+
+<script>
+["SOXL","TQQQ"].forEach(async ticker => {
+  try {
+    const r = await fetch("https://levsigapi-production.up.railway.app/api/public/signal-status/" + ticker);
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    const el = document.getElementById("sig-" + ticker);
+    el.textContent = d.state;
+    el.classList.remove("loading");
+    el.classList.add(d.state === "LONG" ? "long" : "flat");
+  } catch(e) {
+    const el = document.getElementById("sig-" + ticker);
+    el.textContent = "—";
+    el.classList.remove("loading");
+    el.classList.add("flat");
+  }
+});
+</script>
+
+</body>
+</html>
