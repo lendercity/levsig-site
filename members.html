@@ -428,13 +428,15 @@ async function loadSignals() {
   document.getElementById('signals-content').innerHTML = '<div class="loading">Loading signals</div>';
   document.getElementById('summary-pills').innerHTML = '';
 
-  // Fetch open positions for entry price/date lookup
+// Fetch open positions for entry price/date lookup
   const openPositions = {};
   try {
-    const { data: trackData } = await supabase
+    const trackPromise = supabase
       .from('track_record')
       .select('etf_ticker, entry_price, entry_date')
       .eq('status', 'OPEN');
+    const timeoutPromise = new Promise(resolve => setTimeout(resolve, 3000));
+    const { data: trackData } = await Promise.race([trackPromise, timeoutPromise.then(() => ({ data: null }))]);
     if (trackData) trackData.forEach(p => { openPositions[p.etf_ticker] = p; });
   } catch(e) { console.warn('Could not load track record:', e); }
 
