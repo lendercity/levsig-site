@@ -536,8 +536,16 @@ function renderCard(s) {
   const entryDateStr = s.entry_date 
     ? ` <span style="color:#555;font-size:.65rem;">· ${s.entry_date}</span>` 
     : '';
-  const entryLine = s.entry_price && (s.status === 'ENTRY' || s.status === 'HOLD')
-    ? `<span class="sig-meta">Entry <strong>$${s.entry_price}</strong>${entryDateStr}</span>`
+// For HOLD cards use track_record entry price/date, for ENTRY use today's signal price
+  const primaryTicker = etfTickers[0];
+  const trackPos = openPositions[primaryTicker];
+  const displayEntry = s.status === 'HOLD' && trackPos ? trackPos.entry_price : s.entry_price;
+  const displayEntryDate = s.status === 'HOLD' && trackPos ? trackPos.entry_date : null;
+  const entryDateStr = displayEntryDate
+    ? ` <span style="color:#555;font-size:.65rem;">· ${displayEntryDate}</span>`
+    : '';
+  const entryLine = displayEntry && (s.status === 'ENTRY' || s.status === 'HOLD')
+    ? `<span class="sig-meta">Entry <strong>$${displayEntry}</strong>${entryDateStr}</span>`
     : '';
 
   const stopLine = s.stop_price
