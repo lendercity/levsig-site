@@ -538,7 +538,7 @@ function renderCard(s, originals) {
 
 
 // For HOLD, use original entry from track_record; for ENTRY, use today's signal
-  const orig = originals[s.etf_ticker];
+  const orig = originals && originals[s.etf_ticker];
   const displayEntry = (s.status === 'HOLD' && orig) ? orig.entry_price : s.entry_price;
   const displayStop  = (s.status === 'HOLD' && orig) ? orig.stop_price  : s.stop_price;
   const displayEntryDate = (s.status === 'HOLD' && orig) ? orig.entry_date : null;
