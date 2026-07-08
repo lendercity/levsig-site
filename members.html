@@ -444,7 +444,8 @@ async function loadSignals() {
   // Get most recent date
   const latestDate = data[0].signal_date;
   const rawSignals = data.filter(s => s.signal_date === latestDate);
-  // Fetch original entry data from track_record for HOLD overrides
+  
+// Fetch original entry data from track_record for HOLD overrides
   const { data: openPositions } = await supabase
     .from('track_record')
     .select('etf_ticker, entry_date, entry_price, stop_price')
@@ -511,14 +512,14 @@ async function loadSignals() {
     if (group.length === 0) return;
     html += `<div class="section-head" style="margin-bottom:.75rem;margin-top:${html ? '1.5rem' : '0'}">${label}</div>`;
     html += '<div class="signal-grid">';
-    group.forEach(s => { html += renderCard(s); });
+    group.forEach(s => { html += renderCard(s, originals); });
     html += '</div>';
   });
 
   document.getElementById('signals-content').innerHTML = html;
 }
 
-function renderCard(s) {
+function renderCard(s, originals) {
   // Underlying Rating labels stored in DB: HIGH, MED-HIGH, MEDIUM, LOWER, CAUTION
   const confColor = s.confidence === 'HIGH'     ? '#00C853' :
                     s.confidence === 'MED-HIGH'  ? '#00C853' :
