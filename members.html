@@ -565,16 +565,7 @@ function renderCard(s, originals) {
   const etfTagsHtml = etfTickers.map(t =>
     `<span class="etf-tag">${t}</span>`
   ).join('');
-  const primaryTicker = etfTickers[0];
-  const trackPos = null;
-  const displayEntry = s.status === 'HOLD' && trackPos ? trackPos.entry_price : s.entry_price;
-  const displayEntryDate = s.status === 'HOLD' && trackPos ? trackPos.entry_date : null;
-  const entryDateStr = displayEntryDate
-    ? ` <span style="color:#555;font-size:.65rem;">· ${displayEntryDate}</span>`
-    : '';
-  const entryLine = displayEntry && (s.status === 'ENTRY' || s.status === 'HOLD')
-    ? `<span class="sig-meta">Entry <strong>$${displayEntry}</strong>${entryDateStr}</span>`
-    : '';
+  
   return `
   <div class="sig-card">
     <div class="sig-card-top">
