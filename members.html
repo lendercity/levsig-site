@@ -444,6 +444,13 @@ async function loadSignals() {
   // Get most recent date
   const latestDate = data[0].signal_date;
   const rawSignals = data.filter(s => s.signal_date === latestDate);
+  // Fetch original entry data from track_record for HOLD overrides
+  const { data: openPositions } = await supabase
+    .from('track_record')
+    .select('etf_ticker, entry_date, entry_price, stop_price')
+    .eq('status', 'OPEN');
+  const originals = {};
+  (openPositions || []).forEach(p => { originals[p.etf_ticker] = p; });
 
   // Group by underlying — one card per underlying, all ETFs listed
   const grouped = {};
@@ -529,8 +536,18 @@ function renderCard(s) {
 
 
 
-  const stopLine = s.stop_price
-    ? `<span class="sig-meta">Stop <strong>$${s.stop_price}</strong></span>`
+// For HOLD, use original entry from track_record; for ENTRY, use today's signal
+  const orig = originals[s.etf_ticker];
+  const displayEntry = (s.status === 'HOLD' && orig) ? orig.entry_price : s.entry_price;
+  const displayStop  = (s.status === 'HOLD' && orig) ? orig.stop_price  : s.stop_price;
+  const displayEntryDate = (s.status === 'HOLD' && orig) ? orig.entry_date : null;
+
+  const entryLine = displayEntry && (s.status === 'ENTRY' || s.status === 'HOLD')
+    ? `<span class="sig-meta">Entry <strong>$${displayEntry}</strong>${displayEntryDate ? ` <span style="color:#888;font-size:.85em;">(${displayEntryDate})</span>` : ''}</span>`
+    : '';
+
+  const stopLine = displayStop
+    ? `<span class="sig-meta">Stop <strong>$${displayStop}</strong></span>`
     : '';
 
   const rsiLine = s.rsi
