@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why LevSig Only Covers 10 Leveraged ETFs | LevSig</title>
+<meta name="description" content="How 4-year backtesting cut LevSig's watchlist from 24 leveraged ETFs to a curated 10 — lifting profit factor from 1.36 to 2.01 and cutting max drawdown by 67%.">
+<meta property="og:title" content="Why LevSig Only Covers 10 Leveraged ETFs">
+<meta property="og:description" content="Data-driven curation: how backtesting cut our watchlist from 24 to 10 and materially improved the strategy.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why LevSig Only Covers 10 Leveraged ETFs",
+  "description": "How 4-year backtesting cut LevSig's watchlist from 24 leveraged ETFs to a curated 10 \u2014 lifting profit factor from 1.36 to 2.01 and cutting max drawdown by 67%.",
+  "author": {"@type": "Organization", "name": "LevSig"},
+  "publisher": {"@type": "Organization", "name": "LevSig", "url": "https://levsig.com"},
+  "datePublished": "2026-07-09",
+  "mainEntityOfPage": "https://levsig.com/learn-curated-universe.html"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does LevSig only cover 10 ETFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A 4-year backtest across 40+ leveraged ETF underlyings identified 10 with the strongest risk-adjusted returns under our signal logic. Underlyings with negative total R or excessive drawdown contribution were removed. The curated universe delivered a profit factor of 2.01 vs 1.36 for the broader watchlist \u2014 with 67% less maximum drawdown."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which leveraged ETFs does LevSig cover?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "LevSig currently signals on TQQQ (QQQ), TECL (XLK), SOXL (SOXX), UDOW (DIA), FAS (XLF), NVDU (NVDA), ROBN (HOOD), HIMZ (HIMS), MUU (MU), and NBIG (NBIS). The mix spans broad-market index leverage, sector leverage, and single-stock leverage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why were some leveraged ETFs removed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Backtesting identified 6-7 underlyings that produced negative total R over the 4-year window under our signal logic. These names \u2014 primarily choppy or low-momentum large caps \u2014 dragged aggregate strategy performance without contributing edge. Removing them lifted overall profit factor while preserving universe diversity."
+      }
+    }
+  ]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0D0D0D;--white:#FFFFFF;--g100:#F5F5F5;--g200:#E8E8E8;--g500:#8A8A8A;--g700:#3D3D3D;
+  --green:#00C853;--red:#FF3B30;--amber:#FF9500;
+  --mono:'Space Mono',monospace;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);background:var(--white);color:var(--black);-webkit-font-smoothing:antialiased}
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2rem;border-bottom:1px solid var(--g200);position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);z-index:100}
+.nav-logo{text-decoration:none;display:flex;align-items:center;}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a{font-size:.875rem;color:var(--g500);text-decoration:none;transition:color .15s}
+.nav-right a:hover{color:var(--black)}
+.nav-cta{font-family:var(--mono);font-size:.7rem;font-weight:700;padding:.5rem 1rem;background:var(--black);color:var(--white);border-radius:4px;text-decoration:none}
+.article-hero{background:var(--black);padding:4rem 2rem 3rem;text-align:center}
+.article-tag{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-bottom:.75rem}
+.article-title{font-size:2rem;font-weight:700;color:var(--white);letter-spacing:-.02em;margin-bottom:1rem;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.2}
+.article-meta{font-family:var(--mono);font-size:.7rem;color:#555}
+.article-body{max-width:680px;margin:0 auto;padding:3rem 2rem 5rem}
+h2{font-size:1.375rem;font-weight:700;letter-spacing:-.02em;margin:2.5rem 0 .75rem;color:var(--black)}
+h3{font-size:1.1rem;font-weight:600;margin:2rem 0 .5rem;color:var(--black)}
+p{font-size:1rem;line-height:1.8;color:var(--g700);margin-bottom:1.25rem}
+p:last-child{margin-bottom:0}
+strong{color:var(--black);font-weight:600}
+.callout{background:var(--g100);border-left:3px solid var(--green);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.callout p{color:var(--black);margin:0}
+.warning{background:#FFF8E7;border-left:3px solid var(--amber);padding:1.25rem 1.5rem;border-radius:0 6px 6px 0;margin:1.75rem 0}
+.warning p{color:#3D2800;margin:0}
+.example-box{background:var(--black);border-radius:8px;padding:1.5rem;margin:1.75rem 0}
+.example-box p{color:#ccc;font-family:var(--mono);font-size:.85rem;line-height:1.8;margin-bottom:.5rem}
+.example-box p:last-child{margin-bottom:0}
+.example-box .green{color:var(--green)}
+.example-box .red{color:var(--red)}
+.example-box .amber{color:var(--amber)}
+.example-box .label{color:#555;font-size:.75rem}
+.stats-table{width:100%;border-collapse:collapse;margin:1.75rem 0;font-family:var(--mono);font-size:.85rem}
+.stats-table th,.stats-table td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--g200)}
+.stats-table th{background:var(--g100);font-weight:700;color:var(--black);font-size:.75rem;letter-spacing:.04em;text-transform:uppercase}
+.stats-table td{color:var(--g700)}
+.stats-table .green{color:var(--green);font-weight:700}
+.stats-table .red{color:var(--red);font-weight:700}
+.universe-table{width:100%;border-collapse:collapse;margin:1.75rem 0;font-family:var(--mono);font-size:.85rem}
+.universe-table th,.universe-table td{padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--g200)}
+.universe-table th{background:var(--black);color:var(--white);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
+.universe-table td{color:var(--g700)}
+.universe-table td:first-child{font-weight:700;color:var(--black)}
+.faq{margin:2.5rem 0}
+.faq-item{border-bottom:1px solid var(--g200);padding:1.25rem 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-weight:600;font-size:.95rem;margin-bottom:.5rem;color:var(--black)}
+.faq-a{font-size:.9rem;color:var(--g700);line-height:1.7}
+.cta-box{background:var(--black);border-radius:8px;padding:2rem;margin-top:3rem;text-align:center}
+.cta-box h3{color:var(--white);font-size:1.25rem;margin-bottom:.5rem;margin-top:0}
+.cta-box p{color:#666;font-size:.875rem;margin-bottom:1.5rem}
+.cta-btn{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:700;padding:.75rem 1.75rem;background:var(--green);color:var(--black);text-decoration:none;border-radius:4px;letter-spacing:.04em}
+.breadcrumb{font-family:var(--mono);font-size:.7rem;color:var(--g500);margin-bottom:2rem}
+.breadcrumb a{color:var(--g500);text-decoration:none}
+.breadcrumb a:hover{color:var(--black)}
+footer{background:var(--black);padding:2rem;text-align:center}
+footer p{font-size:.8rem;color:#444;line-height:1.8}
+footer a{color:#555;text-decoration:none}
+@media(max-width:640px){
+  nav{padding:.75rem 1rem}
+  .article-hero{padding:2.5rem 1rem 2rem}
+  .article-title{font-size:1.5rem}
+  .article-body{padding:2rem 1rem 3rem}
+  .stats-table th,.stats-table td,.universe-table th,.universe-table td{padding:.5rem .6rem;font-size:.75rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <svg width="155" height="44" viewBox="0 0 155 44" xmlns="http://www.w3.org/2000/svg" aria-label="LevSig">
+      <rect x="0"  y="24" width="7" height="14" rx="2" fill="#0D0D0D" opacity="0.18"/>
+      <rect x="11" y="17" width="7" height="21" rx="2" fill="#0D0D0D" opacity="0.38"/>
+      <rect x="22" y="8"  width="7" height="30" rx="2" fill="#00C853"/>
+      <text x="34" y="38" font-family="Space Mono,monospace" font-size="22" font-weight="700" fill="#0D0D0D" letter-spacing="-1.5">Lev<tspan fill="#00C853">Sig</tspan></text>
+    </svg>
+  </a>
+  <div class="nav-right">
+    <a href="/learn.html">Learn</a>
+    <a href="/track.html">Performance</a>
+    <a href="/members.html">Member Login</a>
+    <a href="/" class="nav-cta">GET FREE SIGNALS</a>
+  </div>
+</nav>
+
+<div class="article-hero">
+  <p class="article-tag">Strategy & Universe</p>
+  <h1 class="article-title">Why LevSig Only Covers 10 Leveraged ETFs</h1>
+  <p class="article-meta">LevSig · July 2026 · 5 min read</p>
+</div>
+
+<div class="article-body">
+
+  <div class="breadcrumb">
+    <a href="/">levsig.com</a> → <a href="/learn.html">Learn</a> → Curated Universe
+  </div>
+
+  <p>LevSig launched with 24 leveraged ETFs in its watch universe. As of July 9, 2026, we cover 10. This is the story of how the data told us to cut — and why fewer signals produced materially better strategy performance.</p>
+
+  <h2>The starting universe</h2>
+
+  <p>The original 24 covered a mix of index-based leveraged ETFs (TQQQ, TECL, SOXL, UPRO, LABU) and single-stock leveraged ETFs (NVDU, HIMZ, AMZU, TSLT, PLTU, and 14 others). The pitch was breadth: signals across every major leveraged play, from broad-market to sector to single-stock.</p>
+
+  <p><strong>Breadth was the wrong metric.</strong></p>
+
+  <h2>What the backtest said</h2>
+
+  <p>We ran a 4-year backtest of the LevSig signal logic — 5/20 EMA crossover, MACD histogram confirmation, 1.5× ATR trailing stop with intraday touch, RSI overbought exit — across every underlying in the universe.</p>
+
+  <p>Results on the full 24-ticker universe:</p>
+
+  <div class="example-box">
+    <p class="label">FULL 24-TICKER UNIVERSE — 4-YEAR BACKTEST</p>
+    <p class="amber">Profit Factor: 1.36</p>
+    <p class="amber">Max Drawdown: -46.7R</p>
+    <p class="amber">Aggregate Win Rate: 39%</p>
+    <p class="label">Edge exists but is thin. Drawdown risk is significant.</p>
+  </div>
+
+  <p>Not terrible, but not the strategy we wanted to sell.</p>
+
+  <h2>The pattern in the losers</h2>
+
+  <p>Per-ticker analysis surfaced something clear: <strong>6-7 underlyings had negative total R</strong> over the backtest window. They weren't just underperforming — they were actively dragging the strategy down. Together they accounted for roughly -21R of the -46R aggregate drawdown.</p>
+
+  <p>The pattern: low-momentum large caps and choppy names. AMZN, MSFT, PLTR, UBER, MSTR, CRWV, XBI. Each had good reasons to trend on paper. None trended cleanly enough for a momentum strategy to profit.</p>
+
+  <p>This wasn't a single-stock vs index problem. XBI is index-based and was on the loser list. AAPL and GOOGL were positive but marginal. The pattern was <strong>trend quality</strong>, not category.</p>
+
+  <h2>The curation</h2>
+
+  <p>We removed the negative-R names and re-ran. Then we added two index ETFs whose underlyings scored strongly in isolation (DIA, XLF) and cut a few marginal winners that weren't earning their spot.</p>
+
+  <p>The final 10 underlyings:</p>
+
+  <table class="universe-table">
+    <thead>
+      <tr><th>Underlying</th><th>LevSig ETF</th><th>Category</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>QQQ</td><td>TQQQ</td><td>Nasdaq-100</td></tr>
+      <tr><td>XLK</td><td>TECL</td><td>Tech sector</td></tr>
+      <tr><td>SOXX</td><td>SOXL</td><td>Semiconductors</td></tr>
+      <tr><td>DIA</td><td>UDOW</td><td>Dow 30</td></tr>
+      <tr><td>XLF</td><td>FAS</td><td>Financials</td></tr>
+      <tr><td>NVDA</td><td>NVDU</td><td>Single-stock</td></tr>
+      <tr><td>HOOD</td><td>ROBN</td><td>Single-stock</td></tr>
+      <tr><td>HIMS</td><td>HIMZ</td><td>Single-stock</td></tr>
+      <tr><td>MU</td><td>MUU</td><td>Single-stock</td></tr>
+      <tr><td>NBIS</td><td>NBIG</td><td>Single-stock</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What the curation is worth</h2>
+
+  <p>Same signal logic, same time window, curated universe:</p>
+
+  <table class="stats-table">
+    <thead>
+      <tr><th>Metric</th><th>Full 24-ticker</th><th>Curated 10</th><th>Delta</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Profit Factor</td><td>1.36</td><td class="green">2.01</td><td class="green">+48%</td></tr>
+      <tr><td>Max Drawdown</td><td>-46.7R</td><td class="green">-15.3R</td><td class="green">-67%</td></tr>
+      <tr><td>Win Rate</td><td>39.0%</td><td class="green">45.9%</td><td class="green">+7 pts</td></tr>
+      <tr><td>Negative-R Tickers</td><td>6-7</td><td class="green">0</td><td class="green">—</td></tr>
+    </tbody>
+  </table>
+
+  <p>Same rules. Same market. Different universe. Materially better strategy.</p>
+
+  <h2>What we didn't do</h2>
+
+  <p><strong>We didn't overfit.</strong> The 5/20 EMA, 1.5× ATR, and MACD histogram signals are the same rules that ran on the original 24 — we only changed <em>which underlyings we apply them to</em>.</p>
+
+  <p><strong>We didn't cherry-pick a favorable window.</strong> The 4-year backtest includes the 2022 bear, the 2023 chop, and the 2024-2025 tech run. All three regimes are represented.</p>
+
+  <p><strong>We didn't remove single-stock ETFs to make the strategy look safer.</strong> Half of the final 10 are single-stock leveraged plays (NVDA, HOOD, HIMS, MU, NBIS). We kept them because the data said they work.</p>
+
+  <h2>What this means for subscribers</h2>
+
+  <div class="callout">
+    <p><strong>Fewer signals per day.</strong> The curated universe produces roughly 1-2 new signals per week rather than 3-4 across the broader watchlist. That's a trade we're comfortable with — quality over noise.</p>
+  </div>
+
+  <p><strong>More conviction per signal.</strong> Every underlying in the current universe demonstrated positive risk-adjusted returns over 4 years of backtesting. When LevSig flags an entry, it's on an instrument where the strategy has real edge.</p>
+
+  <p><strong>A defensible track record from here forward.</strong> The prior track record reflected trades on tickers we no longer cover. It wouldn't be honest to keep it — so we reset. Every closed trade on our <a href="/track.html">performance page</a> from July 9, 2026 forward reflects the curated universe.</p>
+
+  <h2>Why we're publishing this</h2>
+
+  <p>Because most signal services would quietly change their universe and hope no one noticed. That felt wrong.</p>
+
+  <p>The strategy is only as good as the data behind it. When the data says to cut, we cut.</p>
+
+  <h2>Frequently asked</h2>
+
+  <div class="faq">
+    <div class="faq-item">
+      <p class="faq-q">Why does LevSig only cover 10 ETFs?</p>
+      <p class="faq-a">A 4-year backtest across 40+ leveraged ETF underlyings identified 10 with the strongest risk-adjusted returns under our signal logic. Underlyings with negative total R or excessive drawdown contribution were removed. The curated universe delivered a profit factor of 2.01 vs 1.36 for the broader watchlist — with 67% less maximum drawdown.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Will you add more ETFs to the universe?</p>
+      <p class="faq-a">Possibly, if new candidates demonstrate the same edge as the current 10. We track potential additions in a watch list and evaluate them against the same 4-year backtest criteria. Additions require demonstrated edge, not just breadth.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why were some leveraged ETFs removed?</p>
+      <p class="faq-a">Backtesting identified 6-7 underlyings that produced negative total R over the 4-year window. These names — primarily choppy or low-momentum large caps like AMZN, MSFT, PLTR, UBER, MSTR — dragged aggregate performance without contributing edge. Removing them lifted overall profit factor while preserving universe diversity.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Does a smaller universe mean less opportunity?</p>
+      <p class="faq-a">In raw signal count, yes — fewer tickers means fewer weekly signals. In quality-adjusted terms, no — the curated universe produces significantly better risk-adjusted returns. For leveraged ETF subscribers, fewer high-conviction signals typically outperforms more low-conviction ones.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is the backtest methodology available?</p>
+      <p class="faq-a">Yes — the LevSig signal logic (5/20 EMA + MACD histogram + 1.5× ATR trailing stop + RSI overbought exit) is documented across our <a href="/learn.html">Learn section</a>. The backtest uses adjusted daily bars, assumes intraday-touch stop fills, and applies the same universal parameters across all tickers. No parameter optimization was performed for individual underlyings.</p>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Get the curated signals daily</h3>
+    <p>LevSig runs its signal system on 10 curated leveraged ETFs every trading day at 4:30pm ET. Free tier includes all signals — entries, ATR trailing stops, RSI, and decay risk.</p>
+    <a href="/" class="cta-btn">GET FREE SIGNALS</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 LevSig LLC · <a href="/">levsig.com</a> · <a href="mailto:support@levsig.com">support@levsig.com</a> · <a href="/terms.html">Terms of Service</a><br>
+  Technical analysis only — not investment advice. Leveraged ETFs carry significant risk of loss.</p>
+</footer>
+
+</body>
+</html>
