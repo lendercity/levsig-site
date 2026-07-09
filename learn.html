@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LevSig Learn — Leveraged ETF Trading Education</title>
-<meta name="description" content="Learn how to trade leveraged ETFs systematically. Articles on volatility decay, ATR stops, entry signals, and ETF comparisons for TQQQ, SOXL, TECL traders.">
+<meta name="description" content="Learn how to trade leveraged ETFs systematically. Articles on volatility decay, ATR stops, entry signals, and the LevSig curated universe.">
 <meta property="og:title" content="LevSig Learn — Leveraged ETF Trading Education">
 <meta property="og:description" content="Systematic trading education for leveraged ETF traders. Volatility decay, ATR stops, signal systems, and more.">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -37,12 +37,14 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:1.25re
 
 .article-card{border:1px solid var(--g200);border-radius:8px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s;display:block}
 .article-card:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(0,200,83,.08)}
+.article-card.featured{border-color:var(--green)}
 .card-top{background:var(--black);padding:1.5rem;min-height:100px;display:flex;align-items:flex-end}
 .card-tag{font-family:var(--mono);font-size:.6rem;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase}
 .card-body{padding:1.25rem}
 .card-title{font-size:1rem;font-weight:600;line-height:1.4;margin-bottom:.5rem;letter-spacing:-.01em}
 .card-excerpt{font-size:.825rem;color:var(--g500);line-height:1.6;margin-bottom:.75rem}
 .card-meta{font-family:var(--mono);font-size:.65rem;color:var(--g500)}
+.featured-badge{display:inline-block;font-family:var(--mono);font-size:.55rem;font-weight:700;color:var(--black);background:var(--green);padding:2px 8px;border-radius:3px;letter-spacing:.06em;margin-left:.5rem;vertical-align:middle}
 
 footer{background:var(--black);padding:2rem;text-align:center}
 footer p{font-size:.8rem;color:#444;line-height:1.8}
@@ -83,6 +85,22 @@ footer a{color:#555;text-decoration:none}
 </div>
 
 <div class="main">
+
+  <p class="section-label">Strategy & Universe</p>
+  <div class="articles">
+
+    <a href="/learn-curated-universe.html" class="article-card featured">
+      <div class="card-top">
+        <span class="card-tag">Strategy · New</span>
+      </div>
+      <div class="card-body">
+        <h2 class="card-title">Why LevSig Only Covers 10 Leveraged ETFs</h2>
+        <p class="card-excerpt">How 4-year backtesting cut our watchlist from 24 leveraged ETFs to a curated 10 — lifting profit factor from 1.36 to 2.01 and cutting max drawdown by 67%.</p>
+        <span class="card-meta">July 2026 · 5 min read</span>
+      </div>
+    </a>
+
+  </div>
 
   <p class="section-label">Fundamentals</p>
   <div class="articles">
@@ -143,17 +161,6 @@ footer a{color:#555;text-decoration:none}
       <div class="card-body">
         <h2 class="card-title">SOXL vs TQQQ — Which Leveraged ETF Should You Trade?</h2>
         <p class="card-excerpt">Semiconductors vs Nasdaq-100 — two very different 3x ETFs with different volatility profiles, decay rates, and signal behavior for systematic traders.</p>
-        <span class="card-meta">July 2026 · 5 min read</span>
-      </div>
-    </a>
-
-    <a href="/learn-mstu-vs-conl.html" class="article-card">
-      <div class="card-top">
-        <span class="card-tag">Comparison</span>
-      </div>
-      <div class="card-body">
-        <h2 class="card-title">MSTU vs CONL — Which Crypto-Linked Leveraged ETF Should You Trade?</h2>
-        <p class="card-excerpt">MicroStrategy 2x vs Coinbase 2x — both crypto-adjacent, both high decay risk, but very different exposure profiles. Here's what systematic traders need to know.</p>
         <span class="card-meta">July 2026 · 5 min read</span>
       </div>
     </a>
