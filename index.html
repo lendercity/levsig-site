@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LevSig — Daily Signals for Single-Stock Leveraged ETFs</title>
-<meta name="description" content="The only signal service built for leveraged ETFs. Proprietary multi-indicator system covering SOXL, MSTU, NVDU, ROBN, HIMZ and 19+ more.">
+<title>LevSig — Daily Signals for 10 Curated Leveraged ETFs</title>
+<meta name="description" content="Daily systematic signals on 10 curated leveraged ETFs — TQQQ, TECL, SOXL, UDOW, FAS, NVDU, ROBN, HIMZ and more. Backtest-validated universe. Free tier available.">
 <link rel="icon" type="image/png" href="levsig-favicon.png">
-<meta property="og:title" content="LevSig — Daily Signals for Leveraged ETFs">
-<meta property="og:description" content="Proprietary multi-indicator signals on SOXL, MSTU, NVDU, ROBN, HIMZ and 19+ more. Free tier available.">
+<meta property="og:title" content="LevSig — Daily Signals for 10 Curated Leveraged ETFs">
+<meta property="og:description" content="Systematic signals on 10 curated leveraged ETFs. Backtest-validated at 2.01 profit factor. Free tier available.">
 <meta property="og:image" content="https://levsig.com/levsig-thumbnail-1200x630.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://levsig.com/levsig-thumbnail-1200x630.png">
@@ -239,12 +239,12 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
   <div>
     <p class="eyebrow">Proprietary signal service for leveraged ETF traders</p>
     <h1>Finally.<br><em>Signals built for</em><br>leveraged ETFs.</h1>
-    <p class="hero-sub">Daily multi-indicator signals on <a href="/etf/soxl.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">SOXL</a>, <a href="/etf/mstu.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">MSTU</a>, <a href="/etf/nvdu.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">NVDU</a>, <a href="/etf/robn.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">ROBN</a>, <a href="/etf/himz.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">HIMZ</a> and <a href="/etf/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">19+ leveraged ETFs</a>. Every signal includes an entry price, ATR stop, and decay risk rating. Delivered after market close.</p>
+    <p class="hero-sub">Daily multi-indicator signals on <a href="/etf/tqqq.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">TQQQ</a>, <a href="/etf/soxl.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">SOXL</a>, <a href="/etf/nvdu.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">NVDU</a>, <a href="/etf/robn.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">ROBN</a>, <a href="/etf/himz.html" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">HIMZ</a> and <a href="/etf/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">5 more curated leveraged ETFs</a>. Every signal includes an entry price, ATR stop, and decay risk rating. Delivered after market close.</p>
     <div class="signup-row">
       <input type="email" placeholder="your@email.com" id="hero-email">
       <button onclick="signup('hero-email')">GET FREE SIGNALS</button>
     </div>
-    <p class="fine" style="margin-top:.5rem">Free tier covers all 24 ETFs. No credit card required.</p>
+    <p class="fine" style="margin-top:.5rem">Free tier covers all 10 curated ETFs. No credit card required.</p>
 
   </div>
 
@@ -258,7 +258,7 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     </div>
     <div class="feed" id="feed"></div>
     <div class="t-foot">
-      <span>24 underlyings · 24 ETFs</span>
+      <span>10 underlyings · 10 curated ETFs</span>
       <span>after market close<div class="blink"></div></span>
     </div>
   </div>
@@ -267,9 +267,9 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
 <div class="tape" aria-hidden="true"><div class="tape-inner" id="tape"></div></div>
 
 <div class="stats">
-  <div class="scell"><span class="snum">29</span><span class="slabel">ETFs tracked</span></div>
-  <div class="scell"><span class="snum">24</span><span class="slabel">Unique underlyings</span></div>
-  <div class="scell"><span class="snum">7</span><span class="slabel">Sectors covered</span></div>
+  <div class="scell"><span class="snum">10</span><span class="slabel">Curated ETFs</span></div>
+  <div class="scell"><span class="snum">2.01</span><span class="slabel">Backtest profit factor</span></div>
+  <div class="scell"><span class="snum">-15R</span><span class="slabel">Max drawdown</span></div>
   <div class="scell"><span class="snum">Daily</span><span class="slabel">Signal delivery</span></div>
 </div>
 
@@ -332,13 +332,13 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     <div>
       <div class="dcard">
         <p class="dtitle">Decay risk by ETF</p>
-        <div class="drow"><span class="detf">SOXL</span><span class="drisk rh">HIGH — 3× index</span></div>
-        <div class="drow"><span class="detf">MSTU</span><span class="drisk rh">HIGH — 2× MSTR vol</span></div>
-        <div class="drow"><span class="detf">HIMZ</span><span class="drisk rh">HIGH — 2× biotech</span></div>
-        <div class="drow"><span class="detf">NVDX</span><span class="drisk rm">MEDIUM — 2× NVDA</span></div>
+        <div class="drow"><span class="detf">SOXL</span><span class="drisk rh">HIGH — 3× semis</span></div>
+        <div class="drow"><span class="detf">TECL</span><span class="drisk rh">HIGH — 3× tech</span></div>
+        <div class="drow"><span class="detf">FAS</span><span class="drisk rh">HIGH — 3× financials</span></div>
+        <div class="drow"><span class="detf">HIMZ</span><span class="drisk rm">MEDIUM — 2× HIMS</span></div>
         <div class="drow"><span class="detf">ROBN</span><span class="drisk rm">MEDIUM — 2× HOOD</span></div>
-        <div class="drow"><span class="detf">TSLT</span><span class="drisk rm">MEDIUM — 2× TSLA</span></div>
-        <div class="drow"><span class="detf">PLTU</span><span class="drisk rl">LOW — 2× PLTR</span></div>
+        <div class="drow"><span class="detf">NVDU</span><span class="drisk rm">MEDIUM — 2× NVDA</span></div>
+        <div class="drow"><span class="detf">TQQQ</span><span class="drisk rl">LOW — 3× Nasdaq</span></div>
         <p class="dnote">Decay risk is calculated from leverage factor and current ATR volatility. Included with every signal.</p>
       </div>
     </div>
@@ -361,7 +361,7 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     </div>
     <div class="tcard">
       <div class="tcard-top">
-        <span class="tcard-etf">NVDX</span>
+        <span class="tcard-etf">NVDU</span>
         <span class="tcard-date">Sample signal</span>
       </div>
       <p class="tcard-signal">Entry on NVDA underlying. Full indicator alignment confirmed. ATR stop defined at entry. Exited when momentum indicator signaled overbought.</p>
@@ -370,15 +370,15 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     </div>
     <div class="tcard">
       <div class="tcard-top">
-        <span class="tcard-etf">TSLT</span>
+        <span class="tcard-etf">MUU</span>
         <span class="tcard-date">Sample signal</span>
       </div>
-      <p class="tcard-signal">Entry on TSLA underlying. Indicators aligned but momentum faded early. ATR stop triggered protecting capital. Discipline over hope.</p>
+      <p class="tcard-signal">Entry on MU underlying. Indicators aligned but momentum faded early. ATR stop triggered protecting capital. Discipline over hope.</p>
       <p class="tcard-result res-stop">−8.2% — ATR stop triggered</p>
       <p class="tcard-note">Stop worked as designed. Loss contained.</p>
     </div>
   </div>
-  <p style="font-size:.8rem;color:var(--g500);margin-top:1.5rem;text-align:center">Live signal history published from day one. Every entry, every exit, timestamped. Past results do not guarantee future performance.</p>
+  <p style="font-size:.8rem;color:var(--g500);margin-top:1.5rem;text-align:center">Live signal history published from day one. Every entry, every exit, timestamped. Past results do not guarantee future performance. <a href="/learn-curated-universe.html" style="color:var(--green);text-decoration:none;">Why 10 curated ETFs? →</a></p>
 </section>
 
 <!-- PRICING -->
@@ -390,9 +390,9 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
     <div class="plan">
       <p class="pname">Free</p>
       <p class="pprice">$0 <span>/ month</span></p>
-      <p class="pdesc">Daily signals across all 24 leveraged ETFs. Entry, stop, decay risk, and confidence rating.</p>
+      <p class="pdesc">Daily signals across all 10 curated leveraged ETFs. Entry, stop, decay risk, and confidence rating.</p>
       <ul class="pfeats">
-        <li>SOXL, NVDX, NVDU, TSLT, MSTU, CONL, ROBN, HIMZ, LOFF, SPAX</li>
+        <li>TQQQ, TECL, SOXL, UDOW, FAS, NVDU, ROBN, HIMZ, MUU, NBIG</li>
         <li>Daily email after market close</li>
         <li>Entry signal with ATR stop price</li>
         <li>RSI overbought exit alerts</li>
@@ -408,7 +408,7 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
       <ul class="pfeats">
         <li>Everything in Free</li>
         <li>Full signal email — entry price, stop, decay risk, confidence</li>
-        <li>All 24 ETFs across 24 underlyings</li>
+        <li>All 10 curated ETFs, backtest-validated universe</li>
         <li>Earnings risk flag before every entry</li>
         <li>Full signal history and performance data</li>
         <li>Priority support</li>
@@ -434,7 +434,7 @@ footer p{font-size:.75rem;color:var(--g500);line-height:1.8}
   <p>© 2026 LevSig LLC · levsig.com · <a href="mailto:support@levsig.com" style="color:var(--g500);text-decoration:none;">support@levsig.com</a><br>
   Technical analysis only — not investment advice. Leveraged ETFs carry significant risk of loss.<br>
   Past signals do not guarantee future results. Always consult a licensed financial advisor before trading.<br>
-  <a href="/etf/" style="color:var(--g500);text-decoration:none;">Browse all 24 ETFs</a> ·
+  <a href="/etf/" style="color:var(--g500);text-decoration:none;">Browse all 10 curated ETFs</a> ·
     <a href="/terms.html" style="color:var(--g500);text-decoration:none;">Risk Disclaimer & Terms of Service</a>    
   </p>
 </footer>
@@ -444,15 +444,13 @@ const signals=[
   {etf:'TQQQ',u:'QQQ', act:'All indicators aligned',st:'ENTRY',cls:'se'},
   {etf:'TECL',u:'XLK', act:'ATR stop active · trend intact',st:'HOLD',cls:'sh'},
   {etf:'SOXL',u:'SOXX',act:'All indicators aligned',st:'ENTRY',cls:'se'},
-  {etf:'NVDX',u:'NVDA',act:'ATR stop active · trend intact',st:'HOLD',cls:'sh'},
-  {etf:'MSTU',u:'MSTR',act:'Momentum overbought · exit',st:'RSI EXIT',cls:'sx'},
-  {etf:'ROBN',u:'HOOD',act:'Indicators not aligned',st:'WAIT',cls:'sw'},
+  {etf:'NVDU',u:'NVDA',act:'ATR stop active · trend intact',st:'HOLD',cls:'sh'},
+  {etf:'ROBN',u:'HOOD',act:'Momentum overbought · exit',st:'RSI EXIT',cls:'sx'},
   {etf:'HIMZ',u:'HIMS',act:'All indicators aligned',st:'ENTRY',cls:'se'},
-  {etf:'TSLT',u:'TSLA',act:'ATR stop active · RSI neutral',st:'HOLD',cls:'sh'},
-  {etf:'TQQQ',u:'QQQ', act:'Momentum negative · no signal',st:'WAIT',cls:'sw'},
-  {etf:'TECL',u:'XLK', act:'All indicators aligned',st:'ENTRY',cls:'se'},
-  {etf:'LOFF',u:'SPCX',act:'All indicators aligned',st:'ENTRY',cls:'se'},
-  {etf:'PLTU',u:'PLTR',act:'Momentum approaching exit',st:'HOLD',cls:'sh'},
+  {etf:'MUU', u:'MU',  act:'ATR stop active · RSI neutral',st:'HOLD',cls:'sh'},
+  {etf:'UDOW',u:'DIA', act:'Indicators not aligned',st:'WAIT',cls:'sw'},
+  {etf:'FAS', u:'XLF', act:'All indicators aligned',st:'ENTRY',cls:'se'},
+  {etf:'NBIG',u:'NBIS',act:'Momentum negative · no signal',st:'WAIT',cls:'sw'},
 ];
 
 const feed=document.getElementById('feed');
@@ -474,11 +472,10 @@ setInterval(()=>{addRow(signals[idx%signals.length]);idx++},3200);
 
 const tapeData=[
   {t:'TQQQ',v:'+3.1%',c:'tg'},{t:'TECL',v:'+2.8%',c:'tg'},
-  {t:'SOXL',v:'+2.4%',c:'tg'},{t:'NVDX',v:'+1.8%',c:'tg'},{t:'MSTU',v:'-3.1%',c:'tr'},
-  {t:'ROBN',v:'+4.2%',c:'tg'},{t:'HIMZ',v:'+8.9%',c:'tg'},{t:'TSLT',v:'+0.6%',c:'tg'},
-  {t:'TQQQ',v:'-1.4%',c:'tr'},{t:'TECL',v:'+5.3%',c:'tg'},{t:'LOFF',v:'+5.3%',c:'tg'},
-  {t:'PLTU',v:'+2.1%',c:'tg'},{t:'NVDU',v:'+1.9%',c:'tg'},{t:'SNDU',v:'+6.7%',c:'tg'},
-  {t:'MUU', v:'+3.4%',c:'tg'},{t:'AAPX',v:'-0.8%',c:'tr'},{t:'CRWU',v:'+7.2%',c:'tg'},
+  {t:'SOXL',v:'+2.4%',c:'tg'},{t:'NVDU',v:'+1.8%',c:'tg'},
+  {t:'ROBN',v:'+4.2%',c:'tg'},{t:'HIMZ',v:'+8.9%',c:'tg'},
+  {t:'UDOW',v:'+0.6%',c:'tg'},{t:'FAS', v:'+1.4%',c:'tg'},
+  {t:'MUU', v:'+3.4%',c:'tg'},{t:'NBIG',v:'+7.2%',c:'tg'},
 ];
 const tape=document.getElementById('tape');
 [...tapeData,...tapeData].forEach(d=>{
