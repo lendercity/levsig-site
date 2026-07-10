@@ -74,6 +74,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
 .pill{font-family:var(--mono);font-size:.75rem;font-weight:700;padding:6px 16px;border-radius:20px}
 .pill-entry{background:var(--green-bg);color:var(--green);border:1px solid rgba(0,200,83,.2)}
 .pill-hold {background:var(--green-bg);color:var(--green);border:1px solid rgba(0,200,83,.2)}
+.pill-cooldown{background:rgba(138,138,138,.12);color:#AAAAAA;border:1px solid rgba(138,138,138,.25)}
 .pill-exit {background:var(--red-bg);color:var(--red);border:1px solid rgba(255,59,48,.2)}
 .pill-wait {background:rgba(255,200,0,.1);color:#FFB800;border:1px solid rgba(255,200,0,.2)}
 
@@ -90,6 +91,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
 .sig-status{font-family:var(--mono);font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:4px}
 .status-ENTRY   {background:var(--green-bg);color:var(--green)}
 .status-HOLD    {background:var(--green-bg);color:var(--green)}
+.status-COOLDOWN{background:rgba(138,138,138,.15);color:#AAAAAA}
 .status-RSI_EXIT{background:var(--red-bg);color:var(--red)}
 .status-WAIT    {background:rgba(255,200,0,.12);color:#FFB800}
 .sig-action{font-family:var(--mono);font-size:.7rem;color:var(--g500);line-height:1.5}
@@ -292,6 +294,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;">
         <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#00C853;font-weight:700;">ENTRY</span> — All indicators aligned. Enter position, set ATR stop.</span>
         <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#00C853;font-weight:700;">ACTIVE POSITION — HOLD</span> — You are currently in this trade. Trend is intact. Trail your stop loss up to the level shown to lock in gains.</span>
+        <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#AAAAAA;font-weight:700;">COOLDOWN</span> — Already stopped out of this move. Underlying trend still looks intact, but we won't re-enter until a genuinely new setup forms — not the same leg twice.</span>
         <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#FF3B30;font-weight:700;">RSI EXIT</span> — Momentum overbought. Exit position, watch for re-entry.</span>
         <span style="font-family:var(--mono);font-size:.65rem;"><span style="color:#FFB800;font-weight:700;">WAIT</span> — Indicators not aligned. No action.</span>
       </div>
@@ -453,6 +456,19 @@ async function loadSignals() {
   const originals = {};
   (openPositions || []).forEach(p => { originals[p.etf_ticker] = p; });
 
+  // Fetch most recent CLOSED position per ticker — used to render a
+  // COOLDOWN card when a signal is HOLD (trend intact) but the actual
+  // position already closed (e.g. stopped out intraday).
+  const { data: closedPositions } = await supabase
+    .from('track_record')
+    .select('etf_ticker, entry_date, entry_price, exit_date, exit_price, exit_reason, pnl_pct')
+    .eq('status', 'CLOSED')
+    .order('exit_date', { ascending: false });
+  const lastClosed = {};
+  (closedPositions || []).forEach(p => {
+    if (!lastClosed[p.etf_ticker]) lastClosed[p.etf_ticker] = p; // first hit per ticker = most recent (already sorted)
+  });
+
   // Group by underlying — one card per underlying, all ETFs listed
   const grouped = {};
   rawSignals.forEach(s => {
@@ -465,16 +481,23 @@ async function loadSignals() {
   });
   let todaySignals = Object.values(grouped);
 
-  // Drop HOLD signals with no matching OPEN track_record row — the position
-  // already closed (e.g. stopped out intraday) even though the underlying's
-  // trend still looks intact. Showing it as an "Active Position" would be
-  // misleading, and its entry/stop data would fall back to today's stale
-  // signal-table values instead of the real (closed) position's originals.
-  todaySignals = todaySignals.filter(s => {
-    if (s.status !== 'HOLD') return true;
+  // Compute a display status per signal: HOLD signals with no matching OPEN
+  // track_record row are showing a technically-intact trend for a position
+  // that already closed. If we have a recent closed record, surface it as
+  // COOLDOWN rather than hiding it or misleadingly showing ACTIVE POSITION.
+  todaySignals.forEach(s => {
     const primaryTicker = (s.etf_tickers && s.etf_tickers[0]) || s.etf_ticker;
-    return !!(originals && originals[primaryTicker]);
+    const hasOpen = !!(originals && originals[primaryTicker]);
+    if (s.status === 'HOLD' && !hasOpen) {
+      s.displayStatus = lastClosed[primaryTicker] ? 'COOLDOWN' : 'HOLD_ORPHAN';
+    } else {
+      s.displayStatus = s.status;
+    }
   });
+
+  // Drop the rare orphan case (HOLD, no open position, no closed record either —
+  // shouldn't normally happen, but fail safe rather than show something wrong).
+  todaySignals = todaySignals.filter(s => s.displayStatus !== 'HOLD_ORPHAN');
 
   const signalDateObj = new Date(latestDate + 'T12:00:00');
   document.getElementById('signal-date').textContent = signalDateObj.toLocaleDateString('en-US', {
@@ -495,42 +518,44 @@ async function loadSignals() {
   }
 
   // Summary pills
-  const counts = { ENTRY: 0, HOLD: 0, RSI_EXIT: 0, WAIT: 0 };
-  todaySignals.forEach(s => { counts[s.status] = (counts[s.status] || 0) + 1; });
+  const counts = { ENTRY: 0, HOLD: 0, COOLDOWN: 0, RSI_EXIT: 0, WAIT: 0 };
+  todaySignals.forEach(s => { counts[s.displayStatus] = (counts[s.displayStatus] || 0) + 1; });
 
   document.getElementById('summary-pills').innerHTML = `
     ${counts.ENTRY   ? `<span class="pill pill-entry">${counts.ENTRY} ENTRY</span>` : ''}
     ${counts.HOLD    ? `<span class="pill pill-hold">${counts.HOLD} HOLD</span>` : ''}
+    ${counts.COOLDOWN? `<span class="pill pill-cooldown">${counts.COOLDOWN} COOLDOWN</span>` : ''}
     ${counts.RSI_EXIT? `<span class="pill pill-exit">${counts.RSI_EXIT} RSI EXIT</span>` : ''}
     ${counts.WAIT    ? `<span class="pill pill-wait">${counts.WAIT} WAIT</span>` : ''}
   `;
 
-  // Order: ENTRY first, then RSI_EXIT, then HOLD, then WAIT
-  const order = { ENTRY: 0, RSI_EXIT: 1, HOLD: 2, WAIT: 3 };
-  todaySignals.sort((a, b) => (order[a.status] || 99) - (order[b.status] || 99));
+  // Order: ENTRY first, then RSI_EXIT, then HOLD, then COOLDOWN, then WAIT
+  const order = { ENTRY: 0, RSI_EXIT: 1, HOLD: 2, COOLDOWN: 3, WAIT: 4 };
+  todaySignals.sort((a, b) => (order[a.displayStatus] || 99) - (order[b.displayStatus] || 99));
 
   // Group by status section
   const sections = [
     { key: 'ENTRY',    label: 'Entry signals' },
     { key: 'RSI_EXIT', label: 'Exit signals' },
     { key: 'HOLD',     label: 'Active Position — Hold' },
+    { key: 'COOLDOWN', label: 'Cooldown — stopped out, trend still intact' },
     { key: 'WAIT',     label: 'Waiting — no signal' },
   ];
 
   let html = '';
   sections.forEach(({ key, label }) => {
-    const group = todaySignals.filter(s => s.status === key);
+    const group = todaySignals.filter(s => s.displayStatus === key);
     if (group.length === 0) return;
     html += `<div class="section-head" style="margin-bottom:.75rem;margin-top:${html ? '1.5rem' : '0'}">${label}</div>`;
     html += '<div class="signal-grid">';
-    group.forEach(s => { html += renderCard(s, originals); });
+    group.forEach(s => { html += renderCard(s, originals, lastClosed); });
     html += '</div>';
   });
 
   document.getElementById('signals-content').innerHTML = html;
 }
 
-function renderCard(s, originals) {
+function renderCard(s, originals, lastClosed) {
   // Underlying Rating labels stored in DB: HIGH, MED-HIGH, MEDIUM, LOWER, CAUTION
   const confColor = s.confidence === 'HIGH'     ? '#00C853' :
                     s.confidence === 'MED-HIGH'  ? '#00C853' :
@@ -544,10 +569,51 @@ function renderCard(s, originals) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
+  const primaryTicker = (s.etf_tickers && s.etf_tickers[0]) || s.etf_ticker;
+
+  // ── COOLDOWN: trend still intact per the underlying, but the actual
+  // position already closed (e.g. stopped out intraday). Show the closed
+  // trade's result instead of pretending it's still an active position.
+  if (s.displayStatus === 'COOLDOWN') {
+    const closed = lastClosed && lastClosed[primaryTicker];
+    const pnlColor = closed && closed.pnl_pct > 0 ? '#00C853' : '#FF3B30';
+    const pnlText  = closed && closed.pnl_pct !== null ? (closed.pnl_pct > 0 ? '+' : '') + closed.pnl_pct + '%' : '—';
+    const etfTickers = (s.etf_tickers && s.etf_tickers.length > 0) ? s.etf_tickers : (s.etf_ticker ? [s.etf_ticker] : [s.underlying]);
+    const primaryDisplay = etfTickers.join(' · ');
+    const etfTagsHtml = etfTickers.map(t => `<span class="etf-tag">${t}</span>`).join('');
+
+    return `
+    <div class="sig-card">
+      <div class="sig-card-top">
+        <div class="sig-card-row1">
+          <div>
+            <span class="sig-underlying">${primaryDisplay}</span>
+            <span class="sig-sector" style="display:block;margin-top:3px;font-size:.72rem;color:#aaa;font-family:var(--mono);font-weight:500;">Source: ${s.underlying} · ${s.sector || ''}</span>
+          </div>
+          <span class="sig-status status-COOLDOWN">COOLDOWN</span>
+        </div>
+        <div class="sig-action" style="color:#ccc;margin-top:6px;">
+          Trend on ${s.underlying} is still intact, but this position was already stopped out${closed && closed.exit_date ? ` on ${closed.exit_date}` : ''}. Won't re-enter until a fresh crossover forms — no chasing the same move twice.
+        </div>
+      </div>
+      <div class="sig-card-bottom">
+        <div style="display:flex;gap:1.25rem;flex-wrap:wrap;">
+          ${closed ? `<span class="sig-meta">Exit <strong>$${closed.exit_price || '—'}</strong></span>` : ''}
+          ${closed ? `<span class="sig-meta">Result <strong style="color:${pnlColor}">${pnlText}</strong></span>` : ''}
+          ${closed && closed.exit_reason ? `<span class="sig-meta">Reason <strong>${closed.exit_reason.replace('_',' ')}</strong></span>` : ''}
+        </div>
+      </div>
+      <div class="sig-card-etfs">
+        ${etfTagsHtml}
+        <span style="font-family:var(--mono);font-size:.65rem;color:#777;margin-left:auto;">Signal source: ${s.underlying}</span>
+      </div>
+    </div>`;
+  }
+
   // For HOLD, use original entry from track_record; for ENTRY, use today's signal
   const orig = originals && originals[s.etf_ticker];
 
-  // Defensive backstop — should already be filtered out in loadSignals(),
+  // Defensive backstop — should already be handled via displayStatus routing,
   // but never render a HOLD card as an active position without a real OPEN row.
   if (s.status === 'HOLD' && !orig) return '';
 
