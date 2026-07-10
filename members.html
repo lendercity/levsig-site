@@ -269,19 +269,19 @@ html,body{height:100%;font-family:var(--sans);background:var(--bg);color:var(--w
         <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">DECAY RISK</p>
         <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">How much daily rebalancing erodes value in choppy or sideways markets.</p>
         <div style="display:flex;flex-direction:column;gap:.4rem;">
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">HIGH</strong> — 3× leverage or high volatility underlying (SOXL, MSTU, HIMZ)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — 2× leverage, moderate volatility (NVDX, ROBN, TSLT)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">LOW</strong> — 2× leverage, stable underlying (PLTU, AAPX)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">HIGH</strong> — 3× leverage or high volatility underlying (SOXL, TECL, FAS)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — 2× leverage, moderate volatility (NVDU, ROBN, HIMZ)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">LOW</strong> — 2× leverage, stable underlying (MUU, NBIG)</span>
         </div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem;">
         <p style="font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:.75rem;">UNDERLYING RATING</p>
         <p style="font-family:var(--mono);font-size:.65rem;color:var(--g500);margin-bottom:.5rem;line-height:1.6;">Rates the underlying ETF source by liquidity and index type. Not a prediction of trade outcome.</p>
         <div style="display:flex;flex-direction:column;gap:.4rem;">
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">HIGH</strong> — Index-based (TQQQ, TECL, SOXL, UPRO)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">MED-HIGH</strong> — Large cap single stock (NVDA, AAPL, MSFT)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — Mid-tier single stock (HOOD, HIMS, COIN)</span>
-          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">LOWER</strong> — Speculative or thin liquidity (UBER, DKNG)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">HIGH</strong> — Index-based (TQQQ, TECL, SOXL, UDOW, FAS)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#00C853;">MED-HIGH</strong> — Large cap single stock (NVDA)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">MEDIUM</strong> — Mid-tier single stock (HOOD, HIMS, MU)</span>
+          <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF9500;">LOWER</strong> — Speculative or thin liquidity (NBIS)</span>
           <span style="font-family:var(--mono);font-size:.65rem;"><strong style="color:#FF3B30;">CAUTION</strong> — Earnings within 5 trading days</span>
         </div>
       </div>
@@ -463,7 +463,18 @@ async function loadSignals() {
       grouped[s.underlying].etf_tickers.push(s.etf_ticker);
     }
   });
-  const todaySignals = Object.values(grouped);
+  let todaySignals = Object.values(grouped);
+
+  // Drop HOLD signals with no matching OPEN track_record row — the position
+  // already closed (e.g. stopped out intraday) even though the underlying's
+  // trend still looks intact. Showing it as an "Active Position" would be
+  // misleading, and its entry/stop data would fall back to today's stale
+  // signal-table values instead of the real (closed) position's originals.
+  todaySignals = todaySignals.filter(s => {
+    if (s.status !== 'HOLD') return true;
+    const primaryTicker = (s.etf_tickers && s.etf_tickers[0]) || s.etf_ticker;
+    return !!(originals && originals[primaryTicker]);
+  });
 
   const signalDateObj = new Date(latestDate + 'T12:00:00');
   document.getElementById('signal-date').textContent = signalDateObj.toLocaleDateString('en-US', {
@@ -533,12 +544,13 @@ function renderCard(s, originals) {
     ? `<div class="earnings-warn">⚠ Earnings risk — position size with caution</div>`
     : '';
 
-
-
-
-
-// For HOLD, use original entry from track_record; for ENTRY, use today's signal
+  // For HOLD, use original entry from track_record; for ENTRY, use today's signal
   const orig = originals && originals[s.etf_ticker];
+
+  // Defensive backstop — should already be filtered out in loadSignals(),
+  // but never render a HOLD card as an active position without a real OPEN row.
+  if (s.status === 'HOLD' && !orig) return '';
+
   const displayEntry = (s.status === 'HOLD' && orig) ? orig.entry_price : s.entry_price;
   const displayStop = s.stop_price;
   const displayEntryDate = (s.status === 'HOLD' && orig) ? orig.entry_date : null;
