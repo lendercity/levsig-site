@@ -67,3 +67,8 @@
   to = "/learn-mstu-vs-conl.html"
   status = 200
 
+  [[redirects]]
+  from = "/learn-position-sizing.html"
+  to = "/learn-position-sizing.html"
+  status = 200
+
